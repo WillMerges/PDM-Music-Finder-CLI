@@ -10,10 +10,10 @@ public class DBController {
     try {
       connection =
           DriverManager.getConnection(
-              "jdbc:postgresql:reddwarf.cs.rit.edu/databases/p320_18",
+              "//jdbc:postgresql://reddwarf.cs.rit.edu/databases/p320_18currentSchema=myschema",
               "p320_18",
               "ieshoocaiDeipi0iev1v");
-              //jdbc:postgresql://reddwarf.cs.rit.edu/databases/p320_18?currentSchema=myschema
+
     } catch (SQLException throwable) {
       throwable.printStackTrace();
       System.exit(0);
