@@ -1,21 +1,24 @@
 package com.company;
 
+import java.util.LinkedList;
 import java.util.Scanner;
+import java.util.StringTokenizer;
 
 public class Main {
 
-
     static boolean exit = false;
+    static LinkedList<String> tokens;
 
     public static void main(String[] args) {
         parseInput();
     }
 
-    public static void parseToken(String token) {
-        token = token.toLowerCase().trim();
-        if(token.startsWith("play")) {
+    public static void parseTokens() {
+        String fst = tokens.get(0).toLowerCase().trim();
+        System.out.println(fst);
+        if(fst.equals("play")) {
             // do stuff, then more stuff
-        } else if(token.equals("exit") || token.equals("quit")) {
+        } else if(fst.equals("exit") || fst.equals("quit")) {
             exit = true;
         } else {
             System.out.println("Unrecognized command!\n");
@@ -23,14 +26,21 @@ public class Main {
     }
 
     public static void parseInput() {
+        tokens = new LinkedList<String>();
         Scanner s = new Scanner(System.in);
-        String token = "";
+        String input = "";
         char c = '\0';
 
         while(!exit) {
             System.out.print("--> ");
-            token = s.nextLine();
-            parseToken(token);
+            input = s.nextLine();
+            tokens.clear();
+            StringTokenizer multiTokenizer = new StringTokenizer(input, " ");
+            while (multiTokenizer.hasMoreTokens())
+            {
+                tokens.add(multiTokenizer.nextToken());
+            }
+            parseTokens();
         }
     }
 }
