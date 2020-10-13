@@ -15,9 +15,15 @@ public class Main {
 
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
-        System.out.println(fst);
         if(fst.equals("play")) {
-            // do stuff, then more stuff
+            if(tokens.size() != 2) {
+                System.out.println("The play command must be in the form: play <song>");
+                return;
+            } else {
+                String song = tokens.get(1);
+                // TODO play the song
+                System.out.println("Played song: "+song);
+            }
         } else if(fst.equals("exit") || fst.equals("quit")) {
             exit = true;
         } else {
