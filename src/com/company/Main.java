@@ -4,6 +4,9 @@ import java.util.Scanner;
 
 public class Main {
 
+
+    static boolean exit = false;
+
     public static void main(String[] args) {
         parseInput();
     }
@@ -12,6 +15,8 @@ public class Main {
         token = token.toLowerCase().trim();
         if(token.startsWith("play")) {
             // do stuff, then more stuff
+        } else if(token.equals("exit") || token.equals("quit")) {
+            exit = true;
         } else {
             System.out.println("Unrecognized command!\n");
         }
@@ -22,7 +27,6 @@ public class Main {
         String token = "";
         char c = '\0';
 
-        boolean exit = false;
         while(!exit) {
             System.out.print("--> ");
             token = s.nextLine();
