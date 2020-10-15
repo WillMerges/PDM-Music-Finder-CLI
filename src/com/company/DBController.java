@@ -38,6 +38,11 @@ public class DBController {
     return true;
   }
 
+  public boolean playSong(int sid) {
+    // TODO
+    return true;
+  }
+
   public boolean listCollection(String user) {
     // TODO
     if (connection == null) {
