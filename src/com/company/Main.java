@@ -17,7 +17,6 @@ public class Main {
     }
 
     // TODO
-    // add help, info, history?, search, search collection
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
         if(fst.equals("play")) {
@@ -88,6 +87,7 @@ public class Main {
             }
         } else if(fst.equals("search")) {
             // TODO
+            // TODO search collection
         } else if(fst.equals("info")) {
             // TODO
         } else if(fst.equals("help")) {
@@ -117,7 +117,7 @@ public class Main {
         while(!exit) {
             System.out.print("--> ");
             input = s.nextLine();
-            // TODO add input to history
+            // TODO add input to history?
 
             tokens.clear();
             StringTokenizer multiTokenizer = new StringTokenizer(input, " ");
