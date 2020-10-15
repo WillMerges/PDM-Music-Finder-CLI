@@ -16,6 +16,8 @@ public class Main {
         parseInput();
     }
 
+    // TODO
+    // add help, info, login, logout
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
         if(fst.equals("play")) {
@@ -57,7 +59,8 @@ public class Main {
                     System.out.println("The list command must be in the form: list <album | artist> <name>");
                 }
             } else {
-                System.out.println("The list command must be in the form: list <album | artist> <name>");
+                System.out.println("The list command must be in the form: list [<album | artist> <name>]\n" +
+                                   "If no album/artist is specified, it will display the logged in user's collection.");
                 return;
             }
         } else if(fst.equals("exit") || fst.equals("quit")) {

@@ -26,6 +26,11 @@ public class DBController {
     return true;
   }
 
+  public boolean playSong(int sid) {
+    // TODO
+    return true;
+  }
+
   public boolean listCollection(String user) {
     // TODO
     return true;
@@ -41,4 +46,13 @@ public class DBController {
     return true;
   }
 
+  public boolean listArtist(int arid) {
+    // TODO
+    return true;
+  }
+
+  public boolean listAlbum(int aid) {
+    // TODO
+    return true;
+  }
 }
