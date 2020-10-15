@@ -17,7 +17,7 @@ public class Main {
     }
 
     // TODO
-    // add help, info, login, logout, history?, search, search collection
+    // add help, info, history?, search, search collection
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
         if(fst.equals("play")) {
@@ -53,16 +53,16 @@ public class Main {
         } else if(fst.equals("list")) {
             // can list albums or artists
             // list with no parameters lists your collection
-            if(tokens.size() == 1) {
+            if (tokens.size() == 1) {
                 //if(user == "") {
-                 //   System.out.println("You must login before trying to access your collection!");
-                   // return;
+                //   System.out.println("You must login before trying to access your collection!");
+                // return;
                 //}
-                if(!db.listCollection(user)) {
-                    System.out.println("Unhandled error listing collection for user: "+user);
+                if (!db.listCollection(user)) {
+                    System.out.println("Unhandled error listing collection for user: " + user);
                     return;
                 }
-            } else if(tokens.size() == 3) {
+            } else if (tokens.size() == 3) {
                 String snd = tokens.get(1).toLowerCase().trim();
                 String third = tokens.get(2).toLowerCase().trim();
                 if (snd.equals("artist")) {
@@ -78,18 +78,28 @@ public class Main {
                 } else {
                     System.out.println("The list command must be in the form: list <album | artist> <name>");
                 }
-            } else if(tokens.size() == 4) {
+            } else if (tokens.size() == 4) {
             } else {
                 System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
-                                   "If no album/artist is specified, it will display the logged in user's collection.\n" +
-                                   "The -id flag can be used to specify an integer id rather than a name.");
+                        "If no album/artist is specified, it will display the logged in user's collection.\n" +
+                        "The -id flag can be used to specify an integer id rather than a name.");
                 return;
             }
+        } else if(fst.equals("search")) {
+            // TODO
+        } else if(fst.equals("info")) {
+            // TODO
+        } else if(fst.equals("help")) {
+            printHelpMessage();
         } else if(fst.equals("exit") || fst.equals("quit") || fst.equals("logout")) {
             exit = true;
         } else {
             System.out.println("Unrecognized command!\n");
         }
+    }
+
+    public static void printHelpMessage() {
+        // TODO
     }
 
     public static void parseInput() {
