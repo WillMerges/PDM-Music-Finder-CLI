@@ -17,7 +17,7 @@ public class Main {
     }
 
     // TODO
-    // add help, info, login, logout
+    // add help, info, login, logout, history?
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
         if(fst.equals("play")) {

@@ -54,4 +54,41 @@ public class DBController {
     // TODO
     return true;
   }
+
+  public boolean dispSongInfo(String song) {
+    // TODO
+    // display all info, including play record
+    return true;
+  }
+
+  public boolean dispSongInfo(int sid) {
+    // TODO
+    return true;
+  }
+
+  public boolean dispArtistInfo(String artist) {
+    // TODO
+    return true;
+  }
+
+  public boolean dispArtistInfo(int arid) {
+    // TODO
+    return true;
+  }
+
+  public boolean dispAlbumInfo(String album) {
+    // TODO
+    return true;
+  }
+
+  public boolean dispAlbumInfo(int aid) {
+    // TODO
+    return true;
+  }
+
+  // search for anything matching string tok
+  public boolean search(String tok) {
+    // TODO
+    return true;
+  }
 }
