@@ -3,10 +3,13 @@ package com.company;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class DBController {
+  private static Connection connection = null;
+
+
   public static void main(String[] args) {
-    Connection connection;
     try {
       connection =
           DriverManager.getConnection(
@@ -18,40 +21,60 @@ public class DBController {
       throwable.printStackTrace();
       System.exit(0);
     }
+
+
   }
 
   public boolean playSong(String song) {
     // TODO
-    return true;
-  }
-
-  public boolean playSong(int sid) {
-    // TODO
+    if (connection == null) {
+      return false;
+    }
+    try {
+      Statement statement = connection.createStatement();
+    } catch (SQLException throwables) {
+      throwables.printStackTrace();
+    }
     return true;
   }
 
   public boolean listCollection(String user) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
     return true;
   }
 
   public boolean listArtist(String artist) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
     return true;
   }
 
   public boolean listAlbum(String album) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
     return true;
   }
 
   public boolean listArtist(int arid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
     return true;
   }
 
   public boolean listAlbum(int aid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
     return true;
   }
 
