@@ -25,4 +25,20 @@ public class DBController {
     // TODO
     return true;
   }
+
+  public boolean listCollection(String user) {
+    // TODO
+    return true;
+  }
+
+  public boolean listArtist(String artist) {
+    // TODO
+    return true;
+  }
+
+  public boolean listAlbum(String album) {
+    // TODO
+    return true;
+  }
+
 }
