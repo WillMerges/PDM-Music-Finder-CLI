@@ -8,14 +8,13 @@ public class DBController {
   public static void main(String[] args) {
     Connection connection;
     try {
-      Class.forName("lib.postgresql-42.2.17.jar");
       connection =
           DriverManager.getConnection(
-              "//jdbc:postgresql://reddwarf.cs.rit.edu/databases/p320_18?currentSchema=myschema",
+              "jdbc:postgresql://reddwarf.cs.rit.edu/p320_18?currentSchema=myschema",
               "p320_18",
               "ieshoocaiDeipi0iev1v");
 
-    } catch (SQLException | ClassNotFoundException throwable) {
+    } catch (SQLException throwable) {
       throwable.printStackTrace();
       System.exit(0);
     }
