@@ -1,12 +1,10 @@
 package com.company;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DBController {
   private Connection connection = null;
+  private String dbString = "p320_18";
 
 
   public void setConnection() {
@@ -28,8 +26,18 @@ public class DBController {
     if (connection == null) {
       return false;
     }
+    // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
+      // Selecting from song based on the inputted title
+      ResultSet resultSet = statement.executeQuery("SELECT song FROM " + dbString + "WHERE Title = " + song);
+      // Output the returned values
+      while (resultSet.next()) {
+        System.out.println(resultSet.getString("Title"));
+      }
+      statement.close();
+      resultSet.close();
+
     } catch (SQLException throwables) {
       throwables.printStackTrace();
     }
