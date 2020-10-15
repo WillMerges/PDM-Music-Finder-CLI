@@ -10,6 +10,7 @@ public class Main {
     static LinkedList<String> tokens;
 
     static DBController db = new DBController();
+    static String user = "";
 
     public static void main(String[] args) {
         parseInput();
@@ -31,21 +32,33 @@ public class Main {
             }
         } else if(fst.equals("list")) {
             // can list albums or artists
-            if(tokens.size() != 3) {
-                System.out.println("The list command must be in the form: list <album | artist> <name>");
-                return;
-            } else {
+            // list with no parameters lists your collection
+            if(tokens.size() == 1) {
+                if(user == "") {
+                    System.out.println("You must login before trying to access your collection!");
+                }
+                if(!db.listCollection(user)) {
+                    System.out.println("Unhandled error listing collection for user: "+user);
+                }
+            } else if(tokens.size() == 3) {
                 String snd = tokens.get(1).toLowerCase().trim();
                 String third = tokens.get(2).toLowerCase().trim();
                 if(snd.equals("artist")) {
-                    System.out.println("Artist: "+third);
-                    // TODO list artists' albums/songs
-                } else if(snd.equals("album")){
-                    System.out.println("Album: "+third+" By: TODO"); // TODO get artist of song
-                    // TODO list songs in album
+                    System.out.println("Artist: "+third); // TODO maybe move this
+                    if(!db.listArtist(third)) {
+                        System.out.println("Error listing artist: "+third); // TODO maybe move this error to listArtist
+                    }
+                } else if(snd.equals("album")) {
+                    System.out.println("Album: "+third); // TODO maybe move this
+                    if(!db.listAlbum(third)) {
+                        System.out.println("Error listing album: "+third); // TODO maybe move this error to listAlbum
+                    }
                 } else {
                     System.out.println("The list command must be in the form: list <album | artist> <name>");
                 }
+            } else {
+                System.out.println("The list command must be in the form: list <album | artist> <name>");
+                return;
             }
         } else if(fst.equals("exit") || fst.equals("quit")) {
             exit = true;
