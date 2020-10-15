@@ -1,15 +1,13 @@
 package com.company;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class DBController {
-  private static Connection connection = null;
+  private Connection connection = null;
+  private String dbString = "p320_18";
 
 
-  public static void main(String[] args) {
+  public void setConnection() {
     try {
       connection =
           DriverManager.getConnection(
@@ -21,8 +19,6 @@ public class DBController {
       throwable.printStackTrace();
       System.exit(0);
     }
-
-
   }
 
   public boolean playSong(String song) {
@@ -30,8 +26,18 @@ public class DBController {
     if (connection == null) {
       return false;
     }
+    // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
+      // Selecting from song based on the inputted title
+      ResultSet resultSet = statement.executeQuery("SELECT song FROM " + dbString + "WHERE Title = " + song);
+      // Output the returned values
+      while (resultSet.next()) {
+        System.out.println(resultSet.getString("Title"));
+      }
+      statement.close();
+      resultSet.close();
+
     } catch (SQLException throwables) {
       throwables.printStackTrace();
     }
