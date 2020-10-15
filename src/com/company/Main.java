@@ -9,6 +9,8 @@ public class Main {
     static boolean exit = false;
     static LinkedList<String> tokens;
 
+    static DBController db = new DBController();
+
     public static void main(String[] args) {
         parseInput();
     }
@@ -21,8 +23,11 @@ public class Main {
                 return;
             } else {
                 String song = tokens.get(1);
-                // TODO play the song
-                System.out.println("Played song: " + song);
+                if(!db.playSong(song)) {
+                    System.out.println("Unable to play song: "+song);
+                } else {
+                    System.out.println("Played song: " + song);
+                }
             }
         } else if(fst.equals("list")) {
             // can list albums or artists
@@ -58,6 +63,8 @@ public class Main {
         while(!exit) {
             System.out.print("--> ");
             input = s.nextLine();
+            // TODO add input to history
+
             tokens.clear();
             StringTokenizer multiTokenizer = new StringTokenizer(input, " ");
             while (multiTokenizer.hasMoreTokens())

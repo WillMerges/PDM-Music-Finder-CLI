@@ -20,4 +20,9 @@ public class DBController {
       System.exit(0);
     }
   }
+
+  public boolean playSong(String song) {
+    // TODO
+    return true;
+  }
 }
