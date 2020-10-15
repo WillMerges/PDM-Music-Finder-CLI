@@ -41,6 +41,7 @@ public class Main {
                 }
             } else if(tokens.size() == 2) {
                 String song = tokens.get(1);
+
                 if(!db.playSong(song)) {
                     System.out.println("Unable to play song: "+song); // TODO move this
                 } else {
