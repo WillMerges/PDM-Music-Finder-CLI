@@ -6,10 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DBController {
-  private static Connection connection = null;
+  private Connection connection = null;
 
 
-  public static void main(String[] args) {
+  public void setConnection() {
     try {
       connection =
           DriverManager.getConnection(
@@ -21,8 +21,6 @@ public class DBController {
       throwable.printStackTrace();
       System.exit(0);
     }
-
-
   }
 
   public boolean playSong(String song) {
