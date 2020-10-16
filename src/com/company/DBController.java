@@ -21,6 +21,12 @@ public class DBController {
     }
   }
 
+  // check if a user exists, if not create a collection for them
+  public boolean userExists(String user) {
+    // TODO
+    return true;
+  }
+
   public boolean playSong(String song) {
     // TODO
     if (connection == null) {
@@ -140,31 +146,38 @@ public class DBController {
     return true;
   }
 
-  public boolean dispSongInfo(String song) {
+  // display info about a song,album,or artist with name 'name'
+  public boolean dispInfo(String name) {
     // TODO
-    // display all info, including play record
     return true;
   }
 
+//  public boolean dispSongInfo(String song) {
+//    // TODO
+//    // display all info, including play record
+//    return true;
+//  }
+
+  // display a "last played" time
   public boolean dispSongInfo(int sid) {
     // TODO
     return true;
   }
 
-  public boolean dispArtistInfo(String artist) {
-    // TODO
-    return true;
-  }
+//  public boolean dispArtistInfo(String artist) {
+//    // TODO
+//    return true;
+//  }
 
   public boolean dispArtistInfo(int arid) {
     // TODO
     return true;
   }
 
-  public boolean dispAlbumInfo(String album) {
-    // TODO
-    return true;
-  }
+//  public boolean dispAlbumInfo(String album) {
+//    // TODO
+//    return true;
+//  }
 
   public boolean dispAlbumInfo(int aid) {
     // TODO
@@ -173,6 +186,12 @@ public class DBController {
 
   // search for anything matching string tok
   public boolean search(String tok) {
+    // TODO
+    return true;
+  }
+
+  // search a user's collection
+  public boolean searchCollection(String user, String tok) {
     // TODO
     return true;
   }

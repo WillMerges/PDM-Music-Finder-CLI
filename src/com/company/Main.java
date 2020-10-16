@@ -28,7 +28,7 @@ public class Main {
                 String id_str = tokens.get(2);
                 int id = -1;
                 try {
-                    Integer.parseInt(id_str);
+                    id = Integer.parseInt(id_str);
                 } catch (final NumberFormatException e) {
                     System.out.println("Song id must be an integer!");
                     return;
@@ -48,7 +48,6 @@ public class Main {
                 }
             } else {
                 System.out.println("The play command must be in the form: play <song | -id id>");
-                return;
             }
         } else if(fst.equals("list")) {
             // can list albums or artists
@@ -60,8 +59,8 @@ public class Main {
                 //}
                 if (!db.listCollection(user)) {
                     System.out.println("Unhandled error listing collection for user: " + user);
-                    return;
                 }
+                return;
             } else if (tokens.size() == 3) {
                 String snd = tokens.get(1).toLowerCase().trim();
                 String third = tokens.get(2).toLowerCase().trim();
@@ -78,18 +77,66 @@ public class Main {
                 } else {
                     System.out.println("The list command must be in the form: list <album | artist> <name>");
                 }
-            } else if (tokens.size() == 4) {
-            } else {
-                System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
-                        "If no album/artist is specified, it will display the logged in user's collection.\n" +
-                        "The -id flag can be used to specify an integer id rather than a name.");
                 return;
+            } else if(tokens.size() == 4) {
+                if(tokens.get(2).equals("-id")) {
+                    String id_str = tokens.get(3);
+                    int id = -1;
+                    try {
+                        id = Integer.parseInt(id_str);
+                    } catch (final NumberFormatException e) {
+                        System.out.println("Song id must be an integer!");
+                    }
+
+                    if(tokens.get(1).equals("album")) {
+                        db.listAlbum(id);
+                    } else if(tokens.get(1).equals("artist")) {
+                        db.listArtist(id);
+                    }
+                }
             }
+            System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
+                    "If no album/artist is specified, it will display the logged in user's collection.\n" +
+                    "The -id flag can be used to specify an integer id rather than a name.");
+
         } else if(fst.equals("search")) {
-            // TODO
-            // TODO search collection
+            if(tokens.size() == 2) {
+                db.search(tokens.get(1));
+            } else if(tokens.size() == 3 && tokens.get(1).equals("collection")) {
+                db.searchCollection(user, tokens.get(2));
+            } else {
+                System.out.println("The search command must be in the form: search [collection] search_term");
+            }
         } else if(fst.equals("info")) {
-            // TODO
+            // NOTE: song, album, artist names can't start with '-' (currently)
+            if(tokens.size() == 2 && !tokens.get(1).startsWith("-")) {
+                db.dispInfo(tokens.get(1));
+                return;
+            } else if(tokens.size() == 3) {
+                String id_str = tokens.get(2);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(id_str);
+                } catch (final NumberFormatException e) {
+                    System.out.println("id must be an integer!");
+                    return;
+                }
+                if (tokens.get(1).equals("-song")) {
+                    db.dispSongInfo(id);
+                    return;
+                } else if (tokens.get(1).equals("-artist")) {
+                    db.dispArtistInfo(id);
+                    return;
+                } else if (tokens.get(1).equals("-album")) {
+                    db.dispAlbumInfo(id);
+                    return;
+                }
+            }
+            System.out.println("The info command can be used in the following ways:");
+            System.out.println("\tinfo search_name");
+            System.out.println("\tinfo -song song_id");
+            System.out.println("\tinfo -album album_id");
+            System.out.println("\tinfo -artist artist_id\n");
         } else if(fst.equals("help")) {
             printHelpMessage();
         } else if(fst.equals("exit") || fst.equals("quit") || fst.equals("logout")) {
