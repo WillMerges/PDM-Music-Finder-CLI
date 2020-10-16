@@ -47,7 +47,7 @@ public class Main {
                     System.out.println("Played song: " + song); // TODO move this
                 }
             } else {
-                System.out.println("The play command must be in the form: play <song | -id id>");
+                System.out.println("The play command must be in the form: play <song | -id id>\n");
             }
         } else if(fst.equals("list")) {
             // can list albums or artists
@@ -69,15 +69,14 @@ public class Main {
                     if (!db.listArtist(third)) {
                         System.out.println("Error listing artist: " + third); // TODO maybe move this error to listArtist
                     }
+                    return;
                 } else if (snd.equals("album")) {
                     System.out.println("Album: " + third); // TODO maybe move this
                     if (!db.listAlbum(third)) {
                         System.out.println("Error listing album: " + third); // TODO maybe move this error to listAlbum
                     }
-                } else {
-                    System.out.println("The list command must be in the form: list <album | artist> <name>");
+                    return;
                 }
-                return;
             } else if(tokens.size() == 4) {
                 if(tokens.get(2).equals("-id")) {
                     String id_str = tokens.get(3);
@@ -90,14 +89,16 @@ public class Main {
 
                     if(tokens.get(1).equals("album")) {
                         db.listAlbum(id);
+                        return;
                     } else if(tokens.get(1).equals("artist")) {
                         db.listArtist(id);
+                        return;
                     }
                 }
             }
             System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
                     "If no album/artist is specified, it will display the logged in user's collection.\n" +
-                    "The -id flag can be used to specify an integer id rather than a name.");
+                    "The -id flag can be used to specify an integer id rather than a name.\n");
 
         } else if(fst.equals("search")) {
             if(tokens.size() == 2) {
@@ -105,7 +106,7 @@ public class Main {
             } else if(tokens.size() == 3 && tokens.get(1).equals("collection")) {
                 db.searchCollection(user, tokens.get(2));
             } else {
-                System.out.println("The search command must be in the form: search [collection] search_term");
+                System.out.println("The search command must be in the form: search [collection] search_term\n");
             }
         } else if(fst.equals("info")) {
             // NOTE: song, album, artist names can't start with '-' (currently)
@@ -147,7 +148,39 @@ public class Main {
     }
 
     public static void printHelpMessage() {
-        // TODO
+        if(tokens.size() == 1) {
+            System.out.println("Possible commands are:");
+            System.out.println("\tplay");
+            System.out.println("\tinfo");
+            System.out.println("\tlist");
+            System.out.println("\tsearch");
+            System.out.println("\texit, quit, or logout");
+            System.out.println("\thelp (shows this menu)");
+            System.out.println("\nuse 'help [command]' for more information\n");
+        }
+        else if(tokens.size() == 2) {
+            if(tokens.get(1).equals("play")) {
+                System.out.println("The play command must be in the form: play <song | -id id>");
+            } else if(tokens.get(1).equals("info")) {
+                System.out.println("The info command can be used in the following ways:");
+                System.out.println("\tinfo search_name");
+                System.out.println("\tinfo -song song_id");
+                System.out.println("\tinfo -album album_id");
+                System.out.println("\tinfo -artist artist_id\n");
+            } else if(tokens.get(1).equals("list")) {
+                System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
+                        "If no album/artist is specified, it will display the logged in user's collection.\n" +
+                        "The -id flag can be used to specify an integer id rather than a name.\n");
+            } else if(tokens.get(1).equals("search")) {
+                System.out.println("The search command must be in the form: search [collection] search_term\n");
+            } else if(tokens.get(1).equals("exit") || tokens.get(1).equals("exit") || tokens.get(1).equals("quit")) {
+                System.out.println("Use exit, quit, and logout to quit application\n");
+            } else {
+                System.out.println("Uncrecognized command: "+tokens.get(1)+"\n");
+            }
+        } else {
+            System.out.println("Help command takes 0 or 1 arguments!");
+        }
     }
 
     public static void parseInput() {
@@ -164,7 +197,6 @@ public class Main {
         while(!exit) {
             System.out.print("--> ");
             input = s.nextLine();
-            // TODO add input to history?
 
             tokens.clear();
             StringTokenizer multiTokenizer = new StringTokenizer(input, " ");
