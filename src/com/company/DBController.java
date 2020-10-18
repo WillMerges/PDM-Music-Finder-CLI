@@ -106,6 +106,23 @@ public class DBController {
     return true;
   }
 
+  // add song to collection
+  public boolean addSong(String user, int sid) {
+    // TODO
+    return true;
+  }
+
+  // add album to collection
+  public boolean addAlbum(String user, int aid) {
+    // TODO
+    return true;
+  }
+
+  public boolean addArtist(String user, int arid) {
+    // TODO
+    return true;
+  }
+
   public boolean listCollection(String user) {
     // TODO
     if (connection == null) {

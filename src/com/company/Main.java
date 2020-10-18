@@ -16,10 +16,30 @@ public class Main {
         parseInput();
     }
 
-    // TODO
+    // TODO remove (remove from collection), import (adds to DB)
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
-        if(fst.equals("play")) {
+        if(fst.equals("add")) {
+            if(tokens.size() == 3) {
+                String id_str = tokens.get(2);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(id_str);
+                } catch (final NumberFormatException e) {
+                    System.out.println("Song id must be an integer!");
+                }
+                if(tokens.get(1).equals("-song")) {
+                    db.addSong(user, id);
+                } else if(tokens.get(1).equals("-album")) {
+                    db.addAlbum(user, id);
+                } else if(tokens.get(1).equals("-artist")) {
+                    db.addArtist(user, id);
+                }
+            }
+            // TODO err msg
+            // TODO help msg
+        }
+        else if(fst.equals("play")) {
             if (tokens.size() == 3) {
                 String flag = tokens.get(1);
                 if(!flag.equals("-id")) {
