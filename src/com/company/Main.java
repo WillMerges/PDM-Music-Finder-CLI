@@ -53,19 +53,27 @@ public class Main {
                     System.out.println("Song id must be an integer!");
                     return;
                 }
-                if(!db.playSong(id)) {
+                // TODO same check as previous playSong
+                db.playSong(id, user);
+
+                /*if(!db.playSong(id, user)) {
                     System.out.println("Unable to play song with id: "+id_str); // TODO move this
                 } else {
                     System.out.println("Played song with id: "+id_str); // TODO move this
-                }
+                }*/
+
             } else if(tokens.size() == 2) {
                 String song = tokens.get(1);
 
-                if(!db.playSong(song)) {
+                // TODO check that this is the proper replacement so we can remove the lava flow below
+                db.playSong(song, user);
+
+                /*if(!db.playSong(song, user)) {
                     System.out.println("Unable to play song: "+song); // TODO move this
                 } else {
                     System.out.println("Played song: " + song); // TODO move this
-                }
+                }*/
+
             } else {
                 System.out.println("The play command must be in the form: play <song | -id id>\n");
             }
