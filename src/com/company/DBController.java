@@ -234,7 +234,7 @@ public class DBController {
       // Selecting from song based on the inputted title
       ResultSet resultSet =
               statement.executeQuery("SELECT PlayRecord FROM " + dbString + " WHERE sid = " + sid);
-      System.out.println("Song was last played: " + resultSet.getString("Time"));
+      System.out.println("Song was last played: " + resultSet.getTime("Time"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
@@ -284,7 +284,7 @@ public class DBController {
       ResultSet resultSet =
               statement.executeQuery("SELECT Album FROM " + dbString + " WHERE aid = " + aid);
       System.out.print("Album's title is: " + resultSet.getString("title"));
-      System.out.println(" and the release date is: " + resultSet.getString("releasedate"));
+      System.out.println(" and the release date is: " + resultSet.getDate("releasedate"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
