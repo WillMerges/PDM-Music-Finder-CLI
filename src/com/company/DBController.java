@@ -165,7 +165,28 @@ public class DBController {
     return true;
   }
 
+  // add artist to collection
   public boolean addArtist(String user, int arid) {
+    // TODO
+    return true;
+  }
+
+  // TODO we DONT need the remove methods?
+
+  // remove song from collection
+  public boolean removeSong(String user, int sid) {
+    // TODO
+    return true;
+  }
+
+  // remove album from collection
+  public boolean removeAlbum(String user, int aid) {
+    // TODO
+    return true;
+  }
+
+  // remove artist from eollection
+  public boolean removeArtist(String user, int arid) {
     // TODO
     return true;
   }

@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.LinkedList;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
 
@@ -16,7 +17,8 @@ public class Main {
         parseInput();
     }
 
-    // TODO remove (remove from collection), import (adds to DB)
+    // TODO import (adds to DB)
+    // TODO we dont need remove
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
         if(fst.equals("add")) {
@@ -26,20 +28,44 @@ public class Main {
                 try {
                     id = Integer.parseInt(id_str);
                 } catch (final NumberFormatException e) {
-                    System.out.println("Song id must be an integer!");
+                    System.out.println("id must be an integer!");
+                    return;
                 }
-                if(tokens.get(1).equals("-song")) {
+                if (tokens.get(1).equals("-song")) {
                     db.addSong(user, id);
-                } else if(tokens.get(1).equals("-album")) {
+                    return;
+                } else if (tokens.get(1).equals("-album")) {
                     db.addAlbum(user, id);
-                } else if(tokens.get(1).equals("-artist")) {
+                    return;
+                } else if (tokens.get(1).equals("-artist")) {
                     db.addArtist(user, id);
+                    return;
                 }
             }
-            // TODO err msg
-            // TODO help msg
-        }
-        else if(fst.equals("play")) {
+            System.out.println("The add command must be in the form: add <-song | -album | -artist> <id>");
+        } else if(fst.equals("remove")) {
+            if (tokens.size() == 3) {
+                String id_str = tokens.get(2);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(id_str);
+                } catch (final NumberFormatException e) {
+                    System.out.println("id must be an integer!");
+                    return;
+                }
+                if (tokens.get(1).equals("-song")) {
+                    db.removeSong(user, id);
+                    return;
+                } else if (tokens.get(1).equals("-album")) {
+                    db.removeAlbum(user, id);
+                    return;
+                } else if (tokens.get(1).equals("-artist")) {
+                    db.removeArtist(user, id);
+                    return;
+                }
+            }
+            System.out.println("The remove command must be in the form: remove <-song | -album | -artist> <id>");
+        } else if(fst.equals("play")) {
             if (tokens.size() == 3) {
                 String flag = tokens.get(1);
                 if(!flag.equals("-id")) {
@@ -182,6 +208,8 @@ public class Main {
             System.out.println("\tinfo");
             System.out.println("\tlist");
             System.out.println("\tsearch");
+            System.out.println("\tadd");
+            System.out.println("\tremove");
             System.out.println("\texit, quit, or logout");
             System.out.println("\thelp (shows this menu)");
             System.out.println("\nuse 'help [command]' for more information\n");
@@ -201,10 +229,14 @@ public class Main {
                         "The -id flag can be used to specify an integer id rather than a name.\n");
             } else if(tokens.get(1).equals("search")) {
                 System.out.println("The search command must be in the form: search [collection] search_term\n");
+            } else if(tokens.get(1).equals("add")) {
+                System.out.println("The add command must be in the form: add <-song | -album | -artist> <id>");
+            } else if(tokens.get(1).equals("remove")) {
+                    System.out.println("The remove command must be in the form: remove <-song | -album | -artist> <id>");
             } else if(tokens.get(1).equals("exit") || tokens.get(1).equals("exit") || tokens.get(1).equals("quit")) {
                 System.out.println("Use exit, quit, and logout to quit application\n");
             } else {
-                System.out.println("Uncrecognized command: "+tokens.get(1)+"\n");
+                System.out.println("Unrecognized command: "+tokens.get(1)+"\n");
             }
         } else {
             System.out.println("Help command takes 0 or 1 arguments!");
@@ -220,11 +252,15 @@ public class Main {
         System.out.println("Please Login!");
         System.out.print("username: ");
         user = s.nextLine();
-        System.out.println("Welcome: "+user+"\n");
+        System.out.println("Welcome, "+user+"\n");
 
         while(!exit) {
             System.out.print("--> ");
-            input = s.nextLine();
+            try {
+                input = s.nextLine();
+            } catch(NoSuchElementException e) { // EOF
+                return;
+            }
 
             tokens.clear();
             StringTokenizer multiTokenizer = new StringTokenizer(input, " ");
