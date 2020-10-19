@@ -234,7 +234,7 @@ public class DBController {
       // Selecting from song based on the inputted title
       ResultSet resultSet =
               statement.executeQuery("SELECT PlayRecord FROM " + dbString + " WHERE sid = " + sid);
-      System.out.println("Song was last played: " + resultSet.getTime("Time"));
+      System.out.println("Song was last played: " + resultSet.getTimestamp("Time"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
