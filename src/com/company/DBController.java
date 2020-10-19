@@ -178,6 +178,20 @@ public class DBController {
   // display a "last played" time
   public boolean dispSongInfo(int sid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
+    // Create and execute the SQL query
+    try {
+      Statement statement = connection.createStatement();
+      // Selecting from song based on the inputted title
+      ResultSet resultSet =
+              statement.executeQuery("SELECT PlayRecord FROM " + dbString + " WHERE sid = " + sid);
+      System.out.println("Song was last played: " + resultSet.getString("Time"));
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
     return true;
   }
 
@@ -187,7 +201,22 @@ public class DBController {
 //  }
 
   public boolean dispArtistInfo(int arid) {
-    // TODO
+    //TODO
+    if (connection == null) {
+      return false;
+    }
+    // Create and execute the SQL query
+    try {
+      Statement statement = connection.createStatement();
+      // Selecting from song based on the inputted title
+      ResultSet resultSet =
+              statement.executeQuery("SELECT Artist FROM " + dbString + " WHERE arid = " + arid);
+      System.out.println("Artist's name is: " + resultSet.getString("name"));
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
+
     return true;
   }
 
@@ -198,6 +227,21 @@ public class DBController {
 
   public boolean dispAlbumInfo(int aid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
+    // Create and execute the SQL query
+    try {
+      Statement statement = connection.createStatement();
+      // Selecting from song based on the inputted title
+      ResultSet resultSet =
+              statement.executeQuery("SELECT Album FROM " + dbString + " WHERE aid = " + aid);
+      System.out.print("Album's title is: " + resultSet.getString("title"));
+      System.out.println(" and the release date is: " + resultSet.getString("releasedate"));
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
     return true;
   }
 
