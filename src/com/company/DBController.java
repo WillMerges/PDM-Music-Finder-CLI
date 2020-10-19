@@ -54,6 +54,7 @@ public class DBController {
           insertStatement.setObject(2, sid);
           insertStatement.setObject(3, LocalDate.now());
           insertStatement.execute();
+          insertStatement.close();
         } else {
           System.out.println(
               "Multiple songs with that name found. Please select the SID of the desired song to be played");
@@ -72,6 +73,8 @@ public class DBController {
                     + resultSet.getString("Title")
                     + " by "
                     + artist.getString("name"));
+
+            artistStatement.close();
           }
 
           Scanner scanner = new Scanner(System.in);
@@ -95,6 +98,7 @@ public class DBController {
                 insertStatement.setObject(2, sid);
                 insertStatement.setObject(3, LocalDate.now());
                 insertStatement.execute();
+                insertStatement.close();
                 break;
               }
             }
@@ -112,9 +116,41 @@ public class DBController {
     }
   }
 
-  public boolean playSong(int sid) {
+  public void playSong(int sid, String username) {
     // TODO
-    return true;
+    if (connection != null) {
+      try {
+        Statement statement = connection.createStatement();
+        // Selecting from song based on the inputted sid
+        ResultSet resultSet =
+            statement.executeQuery("SELECT Song FROM " + dbString + " WHERE sid = " + sid);
+
+        int numResults = 0;
+        while (resultSet.next()) {
+          numResults++;
+        }
+
+        if (numResults == 0) {
+          System.out.println(sid + " is not a valid song sid within the database");
+        } else if (numResults == 1) {
+          System.out.println("Played the song of sid: " + sid);
+          // TODO check this properly inserts
+          PreparedStatement insertStatement =
+              connection.prepareStatement("INSERT INTO PlayRecords VALUES ?, ?, ?");
+          insertStatement.setObject(1, username);
+          insertStatement.setObject(2, sid);
+          insertStatement.setObject(3, LocalDate.now());
+          insertStatement.execute();
+          insertStatement.close();
+        }
+
+        statement.close();
+        resultSet.close();
+
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
+    }
   }
 
   // add song to collection
