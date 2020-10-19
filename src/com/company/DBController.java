@@ -252,10 +252,22 @@ public class DBController {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
-      // Selecting from song based on the inputted title
+      // Selecting from song based on the inputted sid
       ResultSet resultSet =
-              statement.executeQuery("SELECT PlayRecord FROM " + dbString + " WHERE sid = " + sid);
-      System.out.println("Song was last played: " + resultSet.getTimestamp("Time"));
+              statement.executeQuery("SELECT Song FROM " + dbString + " WHERE sid = " + sid);
+
+      System.out.println("Title: " + resultSet.getString("Title"));
+      int trackNum = resultSet.getInt("TrackNum");
+      int aid = resultSet.getInt("aid");
+      resultSet = statement.executeQuery("SELECT PublishesSong FROM " + dbString + " WHERE sid = " + sid);
+      int arid = resultSet.getInt("arid");
+      resultSet = statement.executeQuery("SELECT Artist FROM " + dbString + " WHERE arid = " + arid);
+      System.out.println("Artist: " + resultSet.getString("name"));
+      resultSet = statement.executeQuery("SELECT Album FROM " + dbString + " WHERE aid = " + aid);
+      System.out.print("Album: " + resultSet.getString("title"));
+      System.out.println("Track Number:" + trackNum);
+      resultSet = statement.executeQuery("SELECT PlayRecord FROM " + dbString + " WHERE sid = " + sid);
+      System.out.println("Last played: " + resultSet.getTimestamp("Time"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
