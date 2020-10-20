@@ -328,6 +328,9 @@ public class DBController {
   // search for anything matching string tok
   public boolean search(String tok) {
     // TODO
+    // return all id's of albums, artists, songs matching name
+    // then call dispInfo
+    // profit
     return true;
   }
 
