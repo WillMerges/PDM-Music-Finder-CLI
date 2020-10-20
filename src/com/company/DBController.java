@@ -199,19 +199,13 @@ public class DBController {
   }
 
   public boolean listArtist(String artist) {
-    // TODO
-    if (connection == null) {
-      return false;
-    }
-    return true;
+    System.out.println("This function is not yet implemented yet, please use the id version.");
+    return false;
   }
 
   public boolean listAlbum(String album) {
-    // TODO
-    if (connection == null) {
-      return false;
-    }
-    return true;
+    System.out.println("This function is not yet implemented yet, please use the id version.");
+    return false;
   }
 
   public boolean listArtist(int arid) {
@@ -232,15 +226,9 @@ public class DBController {
 
   // display info about a song,album,or artist with name 'name'
   public boolean dispInfo(String name) {
-    // TODO
-    return true;
+    System.out.println("This function is not yet implemented yet, please use the id version.");
+    return false;
   }
-
-  //  public boolean dispSongInfo(String song) {
-  //    // TODO
-  //    // display all info, including play record
-  //    return true;
-  //  }
 
   // display a "last played" time
   public boolean dispSongInfo(int sid) {
@@ -276,11 +264,6 @@ public class DBController {
     return true;
   }
 
-  //  public boolean dispArtistInfo(String artist) {
-  //    // TODO
-  //    return true;
-  //  }
-
   public boolean dispArtistInfo(int arid) {
     //TODO
     if (connection == null) {
@@ -299,11 +282,6 @@ public class DBController {
 
     return true;
   }
-
-  //  public boolean dispAlbumInfo(String album) {
-  //    // TODO
-  //    return true;
-  //  }
 
   public boolean dispAlbumInfo(int aid) {
     // TODO

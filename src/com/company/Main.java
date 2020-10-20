@@ -98,25 +98,21 @@ public class Main {
                 String song = tokens.get(1);
                 db.playSong(song, user);
             } else {
-                System.out.println("The play command must be in the form: play <song | -id id>\n");
+                System.out.println("The play command must be in the form: play <song | -id id>");
             }
         } else if(fst.equals("list")) {
             // can list albums or artists
             // list with no parameters lists your collection
             if (tokens.size() == 1) {
-                if (!db.listCollection(user)) {
-                    System.out.println("Unhandled error listing collection for user: " + user);
-                }
+                db.listCollection(user);
                 return;
             } else if (tokens.size() == 3) {
                 String snd = tokens.get(1).toLowerCase().trim();
                 String third = tokens.get(2).toLowerCase().trim();
                 if (snd.equals("artist")) {
-                    System.out.println("Artist: " + third); // TODO maybe move this
                     db.listArtist(third);
                     return;
                 } else if (snd.equals("album")) {
-                    System.out.println("Album: " + third); // TODO maybe move this
                     db.listAlbum(third);
                     return;
                 }
@@ -199,6 +195,7 @@ public class Main {
             System.out.println("\tsearch");
             System.out.println("\tadd");
             System.out.println("\tremove");
+            System.out.println("\timport");
             System.out.println("\texit, quit, or logout");
             System.out.println("\thelp (shows this menu)");
             System.out.println("\nuse 'help [command]' for more information\n");
@@ -221,7 +218,9 @@ public class Main {
             } else if(tokens.get(1).equals("add")) {
                 System.out.println("The add command must be in the form: add <-song | -album | -artist> <id>");
             } else if(tokens.get(1).equals("remove")) {
-                    System.out.println("The remove command must be in the form: remove <-song | -album | -artist> <id>");
+                System.out.println("The remove command must be in the form: remove <-song | -album | -artist> <id>");
+            } else if(tokens.get(1).equals("import")) {
+                System.out.println("import command must be in the form: import <song | album | artist>");
             } else if(tokens.get(1).equals("exit") || tokens.get(1).equals("exit") || tokens.get(1).equals("quit")) {
                 System.out.println("Use exit, quit, and logout to quit application\n");
             } else {
