@@ -6,7 +6,6 @@ import java.util.Scanner;
 
 public class DBController {
   private Connection connection = null;
-  private final String dbString = "p320_18";
 
   public void setConnection() {
     try {
@@ -35,7 +34,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         // Selecting from song based on the inputted title
         ResultSet resultSet =
-            statement.executeQuery("SELECT Song FROM " + dbString + " WHERE Title = " + song);
+            statement.executeQuery("SELECT sid FROM Song WHERE Title = " + song);
 
         int numResults = 0;
         while (resultSet.next()) {
@@ -65,7 +64,7 @@ public class DBController {
             Statement artistStatement = connection.createStatement();
             ResultSet artist =
                 artistStatement.executeQuery(
-                    "SELECT Artist FROM " + dbString + " WHERE aid = " + resultSet.getInt("aid"));
+                    "SELECT name FROM Artist WHERE aid = " + resultSet.getInt("aid"));
 
             // Output the song information for the user
             System.out.println(
@@ -123,7 +122,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         // Selecting from song based on the inputted sid
         ResultSet resultSet =
-            statement.executeQuery("SELECT Song FROM " + dbString + " WHERE sid = " + sid);
+            statement.executeQuery("SELECT sid FROM Song WHERE sid = " + sid);
 
         int numResults = 0;
         while (resultSet.next()) {
