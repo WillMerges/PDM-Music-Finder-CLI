@@ -344,4 +344,19 @@ public class DBController {
     // TODO
     return true;
   }
+
+  public boolean importSong() {
+    // TODO
+    return true;
+  }
+
+  public boolean importArtist() {
+    // TODO
+    return true;
+  }
+
+  public boolean importAlbum() {
+    // TODO
+    return true;
+  }
 }

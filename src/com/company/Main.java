@@ -17,11 +17,25 @@ public class Main {
         parseInput();
     }
 
-    // TODO import (adds to DB)
     // TODO we dont need remove
     public static void parseTokens() {
         String fst = tokens.get(0).toLowerCase().trim();
-        if(fst.equals("add")) {
+
+        if(fst.equals("import")) {
+            if(tokens.size() == 2) {
+                if(tokens.get(1).equals("song")) {
+                    db.importSong();
+                    return;
+                } else if(tokens.get(1).equals("artist")) {
+                    db.importArtist();
+                    return;
+                } else if(tokens.get(1).equals("album")) {
+                    db.importAlbum();
+                    return;
+                }
+            }
+            System.out.println("import command must be in the form: import <song | album | artist>");
+        } else if(fst.equals("add")) {
             if(tokens.size() == 3) {
                 String id_str = tokens.get(2);
                 int id = -1;
