@@ -249,6 +249,7 @@ public class DBController {
     if (connection == null) {
       return false;
     }
+
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
@@ -260,7 +261,7 @@ public class DBController {
       int trackNum = resultSet.getInt("TrackNum");
       resultSet = statement.executeQuery("SELECT aid FROM Song WHERE sid = " + sid);
       int aid = resultSet.getInt("aid");
-      resultSet = statement.executeQuery("SELECT arid FROM PublishesSong WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT arid FROM PublishesAlbum WHERE aid = " + aid);
       int arid = resultSet.getInt("arid");
       resultSet = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
       System.out.println("Artist: " + resultSet.getString("name"));
