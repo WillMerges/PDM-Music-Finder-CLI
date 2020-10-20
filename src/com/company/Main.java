@@ -97,9 +97,6 @@ public class Main {
             } else if(tokens.size() == 2) {
                 String song = tokens.get(1);
 
-                // TODO check that this is the proper replacement so we can remove the lava flow below
-                db.playSong(song, user);
-
                 System.out.println("Please enter the sid of the song you want to be played");
                 //db.playSong(song, user);
 
