@@ -147,7 +147,7 @@ public class DBController {
         resultSet.close();
 
       } catch (SQLException throwable) {
-        throwable.printStackTrace();
+        System.out.println("An error occurred while trying to play the selected song. Please try again");
       }
     }
   }
