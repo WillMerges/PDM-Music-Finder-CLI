@@ -93,11 +93,12 @@ public class Main {
                     System.out.println("Song id must be an integer!");
                     return;
                 }
-
                 db.playSong(id, user);
-
             } else if(tokens.size() == 2) {
                 String song = tokens.get(1);
+
+                // TODO check that this is the proper replacement so we can remove the lava flow below
+                db.playSong(song, user);
 
                 System.out.println("Please enter the sid of the song you want to be played");
                 //db.playSong(song, user);
@@ -109,10 +110,6 @@ public class Main {
             // can list albums or artists
             // list with no parameters lists your collection
             if (tokens.size() == 1) {
-                //if(user == "") {
-                //   System.out.println("You must login before trying to access your collection!");
-                // return;
-                //}
                 if (!db.listCollection(user)) {
                     System.out.println("Unhandled error listing collection for user: " + user);
                 }
@@ -122,15 +119,11 @@ public class Main {
                 String third = tokens.get(2).toLowerCase().trim();
                 if (snd.equals("artist")) {
                     System.out.println("Artist: " + third); // TODO maybe move this
-                    if (!db.listArtist(third)) {
-                        System.out.println("Error listing artist: " + third); // TODO maybe move this error to listArtist
-                    }
+                    db.listArtist(third);
                     return;
                 } else if (snd.equals("album")) {
                     System.out.println("Album: " + third); // TODO maybe move this
-                    if (!db.listAlbum(third)) {
-                        System.out.println("Error listing album: " + third); // TODO maybe move this error to listAlbum
-                    }
+                    db.listAlbum(third);
                     return;
                 }
             } else if(tokens.size() == 4) {
