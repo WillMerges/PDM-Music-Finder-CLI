@@ -289,8 +289,8 @@ public class DBController {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet =
-              statement.executeQuery("SELECT Artist FROM " + dbString + " WHERE arid = " + arid);
+      ResultSet resultSet
+              = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
       System.out.println("Artist's name is: " + resultSet.getString("name"));
 
     } catch (SQLException throwable) {
@@ -315,9 +315,14 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted title
       ResultSet resultSet =
-              statement.executeQuery("SELECT Album FROM " + dbString + " WHERE aid = " + aid);
+              statement.executeQuery("SELECT Title FROM Album WHERE aid = " + aid);
       System.out.print("Album's title is: " + resultSet.getString("title"));
+      resultSet = statement.executeQuery("SELECT releasedate FROM Album WHERE aid = " + aid);
       System.out.println(" and the release date is: " + resultSet.getDate("releasedate"));
+      resultSet = statement.executeQuery("SELECT arid FROM PublishesAlbum WHERE aid = " + aid);
+      int arid = resultSet.getInt("arid");
+      resultSet = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
+      System.out.println("Artist: " + resultSet.getString("name"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
