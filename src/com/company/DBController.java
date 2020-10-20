@@ -254,19 +254,20 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted sid
       ResultSet resultSet =
-              statement.executeQuery("SELECT Song FROM " + dbString + " WHERE sid = " + sid);
-
+              statement.executeQuery("SELECT Title FROM Song WHERE sid = " + sid);
       System.out.println("Title: " + resultSet.getString("Title"));
+      resultSet = statement.executeQuery("SELECT TrackNum FROM Song WHERE sid = " + sid);
       int trackNum = resultSet.getInt("TrackNum");
+      resultSet = statement.executeQuery("SELECT aid FROM Song WHERE sid = " + sid);
       int aid = resultSet.getInt("aid");
-      resultSet = statement.executeQuery("SELECT PublishesSong FROM " + dbString + " WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT arid FROM PublishesSong WHERE sid = " + sid);
       int arid = resultSet.getInt("arid");
-      resultSet = statement.executeQuery("SELECT Artist FROM " + dbString + " WHERE arid = " + arid);
+      resultSet = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
       System.out.println("Artist: " + resultSet.getString("name"));
-      resultSet = statement.executeQuery("SELECT Album FROM " + dbString + " WHERE aid = " + aid);
+      resultSet = statement.executeQuery("SELECT title FROM Album WHERE aid = " + aid);
       System.out.print("Album: " + resultSet.getString("title"));
       System.out.println("Track Number:" + trackNum);
-      resultSet = statement.executeQuery("SELECT PlayRecord FROM " + dbString + " WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT Time FROM PlayRecords WHERE sid = " + sid);
       System.out.println("Last played: " + resultSet.getTimestamp("Time"));
 
     } catch (SQLException throwable) {
@@ -288,7 +289,6 @@ public class DBController {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
-      // Selecting from song based on the inputted title
       ResultSet resultSet =
               statement.executeQuery("SELECT Artist FROM " + dbString + " WHERE arid = " + arid);
       System.out.println("Artist's name is: " + resultSet.getString("name"));
