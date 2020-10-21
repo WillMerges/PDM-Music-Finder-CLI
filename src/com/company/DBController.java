@@ -274,7 +274,7 @@ public class DBController {
       Statement statement = connection.createStatement();
       ResultSet resultSet
               = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
-      System.out.println("Artist'scanner name is: " + resultSet.getString("name"));
+      System.out.println("Artist's name is: " + resultSet.getString("name"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
@@ -294,7 +294,7 @@ public class DBController {
       // Selecting from song based on the inputted title
       ResultSet resultSet =
               statement.executeQuery("SELECT Title FROM Album WHERE aid = " + aid);
-      System.out.print("Album'scanner title is: " + resultSet.getString("title"));
+      System.out.print("Album's title is: " + resultSet.getString("title"));
       resultSet = statement.executeQuery("SELECT releasedate FROM Album WHERE aid = " + aid);
       System.out.println(" and the release date is: " + resultSet.getDate("releasedate"));
       resultSet = statement.executeQuery("SELECT arid FROM PublishesAlbum WHERE aid = " + aid);
@@ -314,6 +314,29 @@ public class DBController {
     // return all id'scanner of albums, artists, songs matching name
     // then call dispInfo
     // profit
+    if (connection == null) {
+      return false;
+    }
+    // Create and execute the SQL query
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet resultSet =
+              statement.executeQuery("SELECT arid FROM Artist WHERE name = " + tok);
+      while (resultSet.next()){
+        dispArtistInfo(resultSet.getInt("arid"));
+      }
+      resultSet = statement.executeQuery("SELECT aid FROM Album WHERE Title = " + tok);
+      while (resultSet.next()){
+        dispAlbumInfo(resultSet.getInt("aid"));
+      }
+      resultSet = statement.executeQuery("SELECT sid FROM Song WHERE Title = " + tok);
+      while (resultSet.next()){
+        dispAlbumInfo(resultSet.getInt("sid"));
+      }
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
     return true;
   }
 
