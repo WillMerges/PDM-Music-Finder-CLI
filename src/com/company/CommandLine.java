@@ -155,10 +155,7 @@ public class CommandLine {
             db.playSong(id, user);
         } else if(tokens.size() == 2) {
             String song = tokens.get(1);
-
-            System.out.println("Please enter the song ID of the song you want to be played");
-            //db.playSong(song, user);
-
+            db.playSong(song, user);
         } else {
             playHelp();
         }
