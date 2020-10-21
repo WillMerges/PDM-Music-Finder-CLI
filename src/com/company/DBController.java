@@ -257,6 +257,7 @@ public class DBController {
       System.out.println("Track Number:" + trackNum);
       resultSet = statement.executeQuery("SELECT Time FROM PlayRecords WHERE sid = " + sid);
       System.out.println("Last played: " + resultSet.getTimestamp("Time"));
+      resultSet.close();
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
@@ -275,6 +276,7 @@ public class DBController {
       ResultSet resultSet
               = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
       System.out.println("Artist's name is: " + resultSet.getString("name"));
+      resultSet.close();
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
@@ -301,6 +303,7 @@ public class DBController {
       int arid = resultSet.getInt("arid");
       resultSet = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
       System.out.println("Artist: " + resultSet.getString("name"));
+      resultSet.close();
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
@@ -333,6 +336,7 @@ public class DBController {
       while (resultSet.next()){
         dispSongInfo(resultSet.getInt("sid"));
       }
+      resultSet.close();
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
