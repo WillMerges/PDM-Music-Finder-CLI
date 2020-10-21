@@ -274,7 +274,7 @@ public class DBController {
       Statement statement = connection.createStatement();
       ResultSet resultSet
               = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
-      System.out.println("Artist's name is: " + resultSet.getString("name"));
+      System.out.println("Artist'scanner name is: " + resultSet.getString("name"));
 
     } catch (SQLException throwable) {
       throwable.printStackTrace();
@@ -294,7 +294,7 @@ public class DBController {
       // Selecting from song based on the inputted title
       ResultSet resultSet =
               statement.executeQuery("SELECT Title FROM Album WHERE aid = " + aid);
-      System.out.print("Album's title is: " + resultSet.getString("title"));
+      System.out.print("Album'scanner title is: " + resultSet.getString("title"));
       resultSet = statement.executeQuery("SELECT releasedate FROM Album WHERE aid = " + aid);
       System.out.println(" and the release date is: " + resultSet.getDate("releasedate"));
       resultSet = statement.executeQuery("SELECT arid FROM PublishesAlbum WHERE aid = " + aid);
@@ -311,13 +311,13 @@ public class DBController {
   // search for anything matching string tok
   public boolean search(String tok) {
     // TODO
-    // return all id's of albums, artists, songs matching name
+    // return all id'scanner of albums, artists, songs matching name
     // then call dispInfo
     // profit
     return true;
   }
 
-  // search a user's collection
+  // search a user'scanner collection
   public boolean searchCollection(String user, String tok) {
     // TODO
     return true;
