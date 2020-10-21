@@ -331,7 +331,7 @@ public class DBController {
       }
       resultSet = statement.executeQuery("SELECT sid FROM Song WHERE Title = " + tok);
       while (resultSet.next()){
-        dispAlbumInfo(resultSet.getInt("sid"));
+        dispSongInfo(resultSet.getInt("sid"));
       }
 
     } catch (SQLException throwable) {
