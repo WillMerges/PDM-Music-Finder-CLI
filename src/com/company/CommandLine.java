@@ -153,7 +153,7 @@ public class CommandLine {
                 return;
             }
             db.playSong(id, user);
-        } else if(tokens.size() == 2) {
+        } else if(tokens.size() == 2 && !tokens.get(1).equals("-id")) {
             String song = tokens.get(1);
             db.playSong(song, user);
         } else {
@@ -319,7 +319,7 @@ public class CommandLine {
     }
 
     private void addHelp() {
-        System.out.println("The add command is used to add a song, album or artist to your collection.");
+        //System.out.println("The add command is used to add a song, album or artist to your collection.");
         System.out.println("The add command must be in the form: add <-song | -album | -artist> <id>");
     }
     private void importHelp() {
