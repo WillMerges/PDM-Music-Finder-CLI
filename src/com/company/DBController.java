@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class DBController {
   private Connection connection = null;
 
-  public void setConnection() {
+  public DBController() {
     try {
       connection =
           DriverManager.getConnection(
@@ -274,7 +274,7 @@ public class DBController {
     try {
       Statement statement = connection.createStatement();
       ResultSet resultSet
-              = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
+              = statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = " + arid);
       System.out.println("Artist's name is: " + resultSet.getString("name"));
       System.out.println("They produced the following albums:\n");
       resultSet = statement.executeQuery("" +
