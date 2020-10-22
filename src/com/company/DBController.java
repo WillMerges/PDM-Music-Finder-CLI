@@ -16,7 +16,8 @@ public class DBController {
               "ieshoocaiDeipi0iev1v");
 
     } catch (SQLException throwable) {
-      System.out.println("Unable to connect to DB, please check you are on the correct network then try again.");
+      System.out.println(
+          "Unable to connect to DB, please check you are on the correct network then try again.");
       System.exit(0);
     }
   }
@@ -38,7 +39,20 @@ public class DBController {
   // check if a user exists, if not create a collection for them
   public boolean userExists(String user) {
     // TODO
-    return true;
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet resultSet =
+          statement.executeQuery("SELECT \"username\" FROM \"User\" WHERE \"username\" = " + user);
+
+      while (resultSet.next()) {
+        if (resultSet.getString("username").equals(user)) {
+          return true;
+        }
+      }
+    } catch (SQLException throwables) {
+      throwables.printStackTrace();
+    }
+    return false;
   }
 
   public void playSong(String song, String username) {
@@ -72,6 +86,7 @@ public class DBController {
           System.out.println(
               "Multiple songs with that name found. Please select the SID of the desired song to be played");
 
+          resultSet.first();
           // Go over the multiple matches and output them in the format: "sid Title by artist name
           while (resultSet.next()) {
             // Fetch the artist name from the aid associated with the song
@@ -226,8 +241,9 @@ public class DBController {
     }
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet
-              = statement.executeQuery("SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user +"\'");
+      ResultSet resultSet =
+          statement.executeQuery(
+              "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
       resultSet.next();
       int cid = resultSet.getInt("cid");
       resultSet.close();
@@ -419,33 +435,45 @@ public class DBController {
       // Artist Search
       Statement statement = connection.createStatement();
       ResultSet resultSet =
-          statement.executeQuery("SELECT arid, name FROM \"Artist\" WHERE \"name\" LIKE \'%" + tok + "%\'");
+          statement.executeQuery(
+              "SELECT arid, name FROM \"Artist\" WHERE \"name\" LIKE \'%" + tok + "%\'");
       System.out.println("Artist Results:");
       System.out.println("=================================================================");
       while (resultSet.next()) {
-        System.out.println(resultSet.getString("name")+"  --  id: "+Integer.toString(resultSet.getInt("arid")));
+        System.out.println(
+            resultSet.getString("name")
+                + "  --  id: "
+                + Integer.toString(resultSet.getInt("arid")));
       }
       System.out.println("=================================================================");
       System.out.println();
 
       // Album Search
       resultSet =
-          statement.executeQuery("SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok + "%\'");
+          statement.executeQuery(
+              "SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok + "%\'");
       System.out.println("Album Results:");
       System.out.println("=================================================================");
       while (resultSet.next()) {
-        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("aid")));
+        System.out.println(
+            resultSet.getString("title")
+                + "  --  id: "
+                + Integer.toString(resultSet.getInt("aid")));
       }
       System.out.println("=================================================================");
       System.out.println();
 
       // Song Search
       resultSet =
-          statement.executeQuery("SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok + "%\'");
+          statement.executeQuery(
+              "SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok + "%\'");
       System.out.println("Song Results:");
       System.out.println("=================================================================");
       while (resultSet.next()) {
-        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("sid")));
+        System.out.println(
+            resultSet.getString("title")
+                + "  --  id: "
+                + Integer.toString(resultSet.getInt("sid")));
       }
       System.out.println("=================================================================");
       System.out.println();
@@ -468,46 +496,72 @@ public class DBController {
 
       // Artist Search
       ResultSet resultSet =
-              statement.executeQuery("SELECT a.arid, a.name " +
-                      "FROM \"Artist\" a,  \"Collection\" c, \"ConsistsOfArtist\" ca " +
-                      "WHERE c.cid = ca.cid AND ca.arid = a.arid " +
-                      "AND a.\"name\" LIKE \'%" + tok +"%\' " +
-                      "AND c.\"username\" = \'"+user+"\'");
+          statement.executeQuery(
+              "SELECT a.arid, a.name "
+                  + "FROM \"Artist\" a,  \"Collection\" c, \"ConsistsOfArtist\" ca "
+                  + "WHERE c.cid = ca.cid AND ca.arid = a.arid "
+                  + "AND a.\"name\" LIKE \'%"
+                  + tok
+                  + "%\' "
+                  + "AND c.\"username\" = \'"
+                  + user
+                  + "\'");
 
       System.out.println("Artist Results:");
       System.out.println("=================================================================");
-      while (resultSet.next()){
-        System.out.println(resultSet.getString("name")+"  --  id: "+Integer.toString(resultSet.getInt("arid")));
+      while (resultSet.next()) {
+        System.out.println(
+            resultSet.getString("name")
+                + "  --  id: "
+                + Integer.toString(resultSet.getInt("arid")));
       }
       System.out.println("=================================================================");
       System.out.println();
 
       // Album Search
-      resultSet = statement.executeQuery("SELECT a.aid, a.title " +
-              "FROM \"Album\" a, \"Collection\" c, \"ConsistsOfAlbum\" ca " +
-              "WHERE c.cid = ca.cid AND ca.aid = a.aid " +
-              "AND \"title\" LIKE \'%" + tok +"%\' " +
-              "AND c.\"username\" = \'"+user+"\'");
+      resultSet =
+          statement.executeQuery(
+              "SELECT a.aid, a.title "
+                  + "FROM \"Album\" a, \"Collection\" c, \"ConsistsOfAlbum\" ca "
+                  + "WHERE c.cid = ca.cid AND ca.aid = a.aid "
+                  + "AND \"title\" LIKE \'%"
+                  + tok
+                  + "%\' "
+                  + "AND c.\"username\" = \'"
+                  + user
+                  + "\'");
 
       System.out.println("Album Results:");
       System.out.println("=================================================================");
-      while (resultSet.next()){
-        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("aid")));
+      while (resultSet.next()) {
+        System.out.println(
+            resultSet.getString("title")
+                + "  --  id: "
+                + Integer.toString(resultSet.getInt("aid")));
       }
       System.out.println("=================================================================");
       System.out.println();
 
       // Song Search
-      resultSet = statement.executeQuery("SELECT s.sid, s.title " +
-              "FROM \"Song\" s, \"Collection\" c, \"ConsistsOfSong\" cs " +
-              "WHERE c.cid = cs.cid AND cs.sid = s.sid " +
-              "AND \"title\" LIKE \'%" + tok +"%\' " +
-              "AND c.\"username\" = \'"+user+"\'");
+      resultSet =
+          statement.executeQuery(
+              "SELECT s.sid, s.title "
+                  + "FROM \"Song\" s, \"Collection\" c, \"ConsistsOfSong\" cs "
+                  + "WHERE c.cid = cs.cid AND cs.sid = s.sid "
+                  + "AND \"title\" LIKE \'%"
+                  + tok
+                  + "%\' "
+                  + "AND c.\"username\" = \'"
+                  + user
+                  + "\'");
 
       System.out.println("Song Results:");
       System.out.println("=================================================================");
-      while (resultSet.next()){
-        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("sid")));
+      while (resultSet.next()) {
+        System.out.println(
+            resultSet.getString("title")
+                + "  --  id: "
+                + Integer.toString(resultSet.getInt("sid")));
       }
       System.out.println("=================================================================");
       System.out.println();
