@@ -25,7 +25,11 @@ public class CommandLine {
     public void run() {
         System.out.println("Welcome! Please enter your username to log in.");
         System.out.print("Username: ");
-        user = scanner.nextLine();
+        try {
+            user = scanner.nextLine();
+        } catch(NoSuchElementException e) {
+            System.exit(1);
+        }
 
         System.out.println("Welcome, " + user + "!");
         if (!db.userExists(user)) {
@@ -41,7 +45,7 @@ public class CommandLine {
             try {
                 input = scanner.nextLine();
             } catch(NoSuchElementException e) { // EOF
-                return;
+                System.exit(1);
             }
 
             tokens.clear();
@@ -52,6 +56,7 @@ public class CommandLine {
             }
             parseTokens();
         }
+        exit = false; // reset for next loop
     }
 
     private void parseTokens() {
@@ -81,6 +86,7 @@ public class CommandLine {
                 break;
             case "exit":
             case "quit":
+                System.exit(1);
             case "logout":
                 exit = true;
                 break;
@@ -317,7 +323,7 @@ public class CommandLine {
 
     private void listHelp() {
         System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
-                "If no album/artist is specified, it will display the logged in user'scanner collection.\n" +
+                "If no album/artist is specified, it will display the logged in user's collection.\n" +
                 "The -id flag can be used to specify an integer id rather than a name.");
     }
 

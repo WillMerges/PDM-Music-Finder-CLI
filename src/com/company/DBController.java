@@ -341,19 +341,28 @@ public class DBController {
   }
 
   public void listArtist(int arid) {
-    // TODO check logic
     if (connection != null) {
       try {
         Statement statement = connection.createStatement();
+        ResultSet artist = statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = "+Integer.toString(arid));
+
+        if(!artist.next()) {
+          System.out.println("No artist with id: "+Integer.toString(arid)+"\n");
+          return;
+        }
+
+        System.out.println(artist.getString("name")+", produced the following albums:");
+        System.out.println("=================================================================");
+
         ResultSet albums =
             statement.executeQuery(
-                "SELECT \"A.aid, A.title\" FROM \"PublishesAlbum P, Album A\" WHERE \"(P.arid = "
+                "SELECT A.aid, A.title FROM \"PublishesAlbum\" P, \"Album\" A WHERE P.arid = "
                     + arid
-                    + ")\" AND \"(A.aid = P.aid)\"");
+                    + " AND A.aid = P.aid");
         while (albums.next()) {
-          System.out.println(
-              "AID: " + albums.getString("aid") + ", Title: " + albums.getString("title"));
+          System.out.println(albums.getString("title")+"  --  id:"+albums.getInt("aid"));
         }
+        System.out.println("=================================================================");
       } catch (SQLException throwables) {
         throwables.printStackTrace();
       }
