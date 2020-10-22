@@ -107,7 +107,6 @@ public class DBController {
         Statement statement = connection.createStatement();
         // Selecting from song based on the inputted title
         ResultSet resultSet =
-                
             statement.executeQuery("SELECT \"sid\" FROM \"Song\" WHERE \"title\" = " + song);
 
         int numResults = 0;
