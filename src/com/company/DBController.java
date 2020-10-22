@@ -648,7 +648,7 @@ public class DBController {
           System.out.println("Enter Song length (in seconds)");
           int songLen = scan.nextInt();
           PreparedStatement insertStatement =
-                  connection.prepareStatement("INSERT INTO \"Song\"(sid, title, track_num, length, aid) VALUES(?, ?)");
+                  connection.prepareStatement("INSERT INTO \"Song\"(sid, title, track_num, length, aid) VALUES(?, ?, ?, ?, ?)");
           insertStatement.setObject(1, sid);
           insertStatement.setObject(2, Title);
           insertStatement.setObject(3, trackNum);
@@ -663,7 +663,7 @@ public class DBController {
         throwable.printStackTrace();
       }
     }
-
+    return true;
   }
 
   public boolean importArtist() {
