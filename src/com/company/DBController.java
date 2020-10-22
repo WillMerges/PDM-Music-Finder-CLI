@@ -1,7 +1,7 @@
 package com.company;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class DBController {
@@ -59,13 +59,13 @@ public class DBController {
           System.out.println("Unable to play " + song);
         } else if (numResults == 1) {
           System.out.println("Played " + song);
-          // TODO check this properly inserts
+          // Insert the play record entry
           int sid = resultSet.getInt("sid");
           PreparedStatement insertStatement =
               connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
           insertStatement.setObject(1, username);
           insertStatement.setObject(2, sid);
-          insertStatement.setObject(3, LocalDate.now());
+          insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
           insertStatement.execute();
           insertStatement.close();
         } else {
@@ -83,7 +83,7 @@ public class DBController {
             // Output the song information for the user
             System.out.println(
                 resultSet.getInt("sid: ")
-                    + resultSet.getString("Title")
+                    + resultSet.getString("title")
                     + " by "
                     + artist.getString("name"));
 
@@ -102,14 +102,14 @@ public class DBController {
             // Checked the original list of songs for the inputted sid
             while (resultSet.next()) {
               if (resultSet.getInt("sid") == sid) {
-                System.out.println("Played song: " + resultSet.getString("Title"));
+                System.out.println("Played song: " + resultSet.getString("title"));
                 songPlayed = true;
-                // TODO check that this correctly inserts a PlayRecord entry
+                // Insert the play record entry
                 PreparedStatement insertStatement =
                     connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
                 insertStatement.setObject(1, username);
                 insertStatement.setObject(2, sid);
-                insertStatement.setObject(3, LocalDate.now());
+                insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
                 insertStatement.execute();
                 insertStatement.close();
                 break;
@@ -130,7 +130,6 @@ public class DBController {
   }
 
   public void playSong(int sid, String username) {
-    // TODO
     if (connection != null) {
       try {
         Statement statement = connection.createStatement();
@@ -147,12 +146,13 @@ public class DBController {
           System.out.println(sid + " is not a valid song sid within the database");
         } else if (numResults == 1) {
           System.out.println("Played the song of sid: " + sid);
-          // TODO check this properly inserts
+          // Insert the play record entry
           PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
+              connection.prepareStatement(
+                  "INSERT INTO \"PlayRecords\" (username, sid, time) VALUES (?, ?, ?)");
           insertStatement.setObject(1, username);
           insertStatement.setObject(2, sid);
-          insertStatement.setObject(3, LocalDate.now());
+          insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
           insertStatement.execute();
           insertStatement.close();
         }
@@ -161,7 +161,8 @@ public class DBController {
         resultSet.close();
 
       } catch (SQLException throwable) {
-        System.out.println("An error occurred while trying to play the selected song. Please try again");
+        System.out.println(
+            "An error occurred while trying to play the selected song. Please try again");
       }
     }
   }
@@ -173,13 +174,14 @@ public class DBController {
     }
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet
-              = statement.executeQuery("SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user +"\'");
+      ResultSet resultSet =
+          statement.executeQuery(
+              "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
       resultSet.next();
       int cid = resultSet.getInt("cid");
       resultSet.close();
       PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO \"ConsistsOfSong\"(sid, cid) VALUES(?, ?)");
+          connection.prepareStatement("INSERT INTO \"ConsistsOfSong\"(sid, cid) VALUES(?, ?)");
       insertStatement.setObject(1, sid);
       insertStatement.setObject(2, cid);
       insertStatement.execute();
@@ -198,13 +200,14 @@ public class DBController {
     }
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet
-              = statement.executeQuery("SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user +"\'");
+      ResultSet resultSet =
+          statement.executeQuery(
+              "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
       resultSet.next();
       int cid = resultSet.getInt("cid");
       resultSet.close();
       PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO \"ConsistsOfAlbum\"(aid, cid) VALUES(?, ?)");
+          connection.prepareStatement("INSERT INTO \"ConsistsOfAlbum\"(aid, cid) VALUES(?, ?)");
       insertStatement.setObject(1, aid);
       insertStatement.setObject(2, cid);
       insertStatement.execute();
@@ -229,7 +232,7 @@ public class DBController {
       int cid = resultSet.getInt("cid");
       resultSet.close();
       PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
+          connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
       insertStatement.setObject(1, arid);
       insertStatement.setObject(2, cid);
       insertStatement.execute();
@@ -312,7 +315,7 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted sid
       ResultSet resultSet =
-              statement.executeQuery("SELECT \"title\" FROM \"Song\" WHERE sid = " + sid);
+          statement.executeQuery("SELECT \"title\" FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
       System.out.println("Title: " + resultSet.getString("title"));
       resultSet = statement.executeQuery("SELECT \"trackNum\" FROM \"Song\" WHERE sid = " + sid);
@@ -332,10 +335,9 @@ public class DBController {
       System.out.println("Album: " + resultSet.getString("title"));
       System.out.println("Track Number: " + trackNum);
       resultSet = statement.executeQuery("SELECT \"time\" FROM \"PlayRecords\" WHERE sid = " + sid);
-      if( resultSet.next()) {
+      if (resultSet.next()) {
         System.out.println("Last played: " + resultSet.getTimestamp("time"));
-      }
-      else{
+      } else {
         System.out.println("Never been played");
       }
       resultSet.close();
@@ -353,17 +355,20 @@ public class DBController {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
-      ResultSet resultSet
-              = statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = " + arid);
+      ResultSet resultSet =
+          statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = " + arid);
       resultSet.next();
       System.out.println("Artist's name is: " + resultSet.getString("name"));
       System.out.println("They published the following albums:\n");
-      resultSet = statement.executeQuery("" +
-              "SELECT a.aid, a.title FROM \"Album\" a, \"PublishesAlbum\" p WHERE a.aid = p.aid AND p.arid = "+Integer.toString(arid));
-      while(resultSet.next()) {
+      resultSet =
+          statement.executeQuery(
+              ""
+                  + "SELECT a.aid, a.title FROM \"Album\" a, \"PublishesAlbum\" p WHERE a.aid = p.aid AND p.arid = "
+                  + Integer.toString(arid));
+      while (resultSet.next()) {
         String title = resultSet.getString("title");
         int aid = resultSet.getInt("aid");
-        System.out.println(title+"  ---  id: "+Integer.toString(aid));
+        System.out.println(title + "  ---  id: " + Integer.toString(aid));
       }
       resultSet.close();
 
@@ -383,10 +388,11 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted title
       ResultSet resultSet =
-              statement.executeQuery("SELECT \"title\" FROM \"Album\" WHERE aid = " + aid);
+          statement.executeQuery("SELECT \"title\" FROM \"Album\" WHERE aid = " + aid);
       resultSet.next();
       System.out.println("Title: " + resultSet.getString("title"));
-      resultSet = statement.executeQuery("SELECT \"releasedate\" FROM \"Album\" WHERE aid = " + aid);
+      resultSet =
+          statement.executeQuery("SELECT \"releasedate\" FROM \"Album\" WHERE aid = " + aid);
       resultSet.next();
       System.out.println("Release date: " + resultSet.getDate("releasedate"));
       resultSet = statement.executeQuery("SELECT arid FROM \"PublishesAlbum\" WHERE aid = " + aid);
@@ -413,35 +419,36 @@ public class DBController {
       // Artist Search
       Statement statement = connection.createStatement();
       ResultSet resultSet =
-              statement.executeQuery("SELECT arid, name FROM \"Artist\" WHERE \"name\" LIKE \'%" + tok +"%\'");
+          statement.executeQuery("SELECT arid, name FROM \"Artist\" WHERE \"name\" LIKE \'%" + tok + "%\'");
       System.out.println("Artist Results:");
       System.out.println("=================================================================");
-      while (resultSet.next()){
+      while (resultSet.next()) {
         System.out.println(resultSet.getString("name")+"  --  id: "+Integer.toString(resultSet.getInt("arid")));
       }
       System.out.println("=================================================================");
       System.out.println();
 
       // Album Search
-      resultSet = statement.executeQuery("SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok +"%\'");
+      resultSet =
+          statement.executeQuery("SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok + "%\'");
       System.out.println("Album Results:");
       System.out.println("=================================================================");
-      while (resultSet.next()){
+      while (resultSet.next()) {
         System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("aid")));
       }
       System.out.println("=================================================================");
       System.out.println();
 
       // Song Search
-      resultSet = statement.executeQuery("SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok +"%\'");
+      resultSet =
+          statement.executeQuery("SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok + "%\'");
       System.out.println("Song Results:");
       System.out.println("=================================================================");
-      while (resultSet.next()){
+      while (resultSet.next()) {
         System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("sid")));
       }
       System.out.println("=================================================================");
       System.out.println();
-
       resultSet.close();
 
     } catch (SQLException throwable) {
