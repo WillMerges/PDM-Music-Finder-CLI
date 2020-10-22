@@ -43,7 +43,7 @@ public class DBController implements AutoCloseable {
         String columnValue = resultSet.getString(i);
         System.out.print(columnValue + " " + rsmd.getColumnName(i));
       }
-      System.out.println("");
+      System.out.println();
     }
   }
 
@@ -292,36 +292,36 @@ public class DBController implements AutoCloseable {
 
   // add artist to collection
   public boolean addArtist(String user, int arid) {
-    if (connection == null) {
-      return false;
-    }
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet =
-          statement.executeQuery(
-              "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
-      resultSet.next();
-      int cid = resultSet.getInt("cid");
-      resultSet.close();
-      PreparedStatement insertStatement =
-          connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
-      insertStatement.setObject(1, arid);
-      insertStatement.setObject(2, cid);
-      insertStatement.execute();
-      insertStatement.close();
+    if (connection != null) {
+      try {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet =
+            statement.executeQuery(
+                "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
+        resultSet.next();
+        int cid = resultSet.getInt("cid");
+        resultSet.close();
+        PreparedStatement insertStatement =
+            connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
+        insertStatement.setObject(1, arid);
+        insertStatement.setObject(2, cid);
+        insertStatement.execute();
+        insertStatement.close();
 
-    } catch (SQLException throwable) {
-      throwable.printStackTrace();
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
+      return true;
     }
-    return true;
+    return false;
   }
 
   public boolean listCollection(String user) {
     // TODO
-    if (connection == null) {
-      return false;
+    if (connection != null) {
+      return true;
     }
-    return true;
+    return false;
   }
 
   public void listArtist(int arid) {
@@ -356,25 +356,41 @@ public class DBController implements AutoCloseable {
   public void listAlbum(int aid) {
     try {
       Statement statement = connection.createStatement();
-      ResultSet result = statement.executeQuery("SELECT title FROM \"Album\" WHERE aid = "+Integer.toString(aid));
-      if(!result.next()) {
-        System.out.println("No album with id: "+Integer.toString(aid));
+      ResultSet result =
+          statement.executeQuery(
+              "SELECT title FROM \"Album\" WHERE aid = " + Integer.toString(aid));
+      if (!result.next()) {
+        System.out.println("No album with id: " + Integer.toString(aid));
         return;
       }
 
       System.out.println(result.getString("title"));
       System.out.println("=================================================================");
 
-      result = statement.executeQuery("SELECT s.sid, s.title, s.track_num FROM \"Song\" s, \"Album\" a " +
-              "WHERE a.aid = s.aid AND a.aid = "+Integer.toString(aid) +
-              " ORDER BY s.track_num ASC");
-      while(result.next()) {
-        System.out.println(result.getInt("track_num")+": "+result.getString("title")+"  --  id: "+result.getInt("sid"));
+      result =
+          statement.executeQuery(
+              "SELECT s.sid, s.title, s.track_num FROM \"Song\" s, \"Album\" a "
+                  + "WHERE a.aid = s.aid AND a.aid = "
+                  + Integer.toString(aid)
+                  + " ORDER BY s.track_num ASC");
+      while (result.next()) {
+        System.out.println(
+            result.getInt("track_num")
+                + ": "
+                + result.getString("title")
+                + "  --  id: "
+                + result.getInt("sid"));
       }
 
     } catch (SQLException e) {
       e.printStackTrace();
     }
+    }
+
+  // display info about a song,album,or artist with name 'name'
+  public boolean dispInfo(String name) {
+    System.out.println("This function is not yet implemented yet, please use the id version.");
+    return false;
   }
 
   // display a "last played" time
