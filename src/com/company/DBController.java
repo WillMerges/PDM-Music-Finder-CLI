@@ -236,7 +236,7 @@ public class DBController {
       Statement statement = connection.createStatement();
       ResultSet resultSet =
           statement.executeQuery(
-              "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+              "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
       resultSet.next();
       int cid = resultSet.getInt("cid");
       resultSet.close();
@@ -262,7 +262,7 @@ public class DBController {
       Statement statement = connection.createStatement();
       ResultSet resultSet =
           statement.executeQuery(
-              "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+              "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
       resultSet.next();
       int cid = resultSet.getInt("cid");
       resultSet.close();
@@ -621,7 +621,53 @@ public class DBController {
   }
 
   public boolean importSong() {
-    // TODO
+      //TODO
+      if (connection == null) {
+          return false;
+      }
+      try{
+      Statement statement = connection.createStatement();
+      Scanner scan = new Scanner(System.in);
+      System.out.println("Enter song id");
+      int sid = scan.nextInt();
+      ResultSet resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
+      while (resultSet.next()) {
+          System.out.println("Song with that ID is already in the database please enter a different ID");
+          sid = scan.nextInt();
+          statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
+      }
+      System.out.println("Enter song title");
+      String Title = scan.nextLine();
+      System.out.println("Enter existing album id");
+      int aid = scan.nextInt();
+      resultSet = statement.executeQuery("SELECT aid FROM \"Album\" WHERE aid = " + aid);
+      if (!resultSet.next()){
+          System.out.println("Album does not exist, please try again with a existing album id");
+      }
+      else {
+          resultSet = statement.executeQuery("SELECT \"track_num\" FROM \"Song\" WHERE aid = " + aid);
+          int i = 1;
+          while (resultSet.next()) {
+              i++;
+          }
+          resultSet.close();
+          int trackNum = i;
+          System.out.println("Enter length of song");
+          int songLen = scan.nextInt();
+          PreparedStatement insertStatement =
+                  connection.prepareStatement("INSERT INTO \"Song\"(sid, title, track_num, length, aid) VALUES(?, ?, ?, ?, ?)");
+          insertStatement.setObject(1, sid);
+          insertStatement.setObject(2, Title);
+          insertStatement.setObject(3, trackNum);
+          insertStatement.setObject(4, songLen);
+          insertStatement.setObject(5, aid);
+          insertStatement.execute();
+          insertStatement.close();
+      }
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+    }
+
     return true;
   }
 
