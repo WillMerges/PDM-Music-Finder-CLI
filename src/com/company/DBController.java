@@ -21,6 +21,20 @@ public class DBController {
     }
   }
 
+  // for DEBUG only
+  private void printResults(ResultSet resultSet) throws SQLException {
+    ResultSetMetaData rsmd = resultSet.getMetaData();
+    int columnsNumber = rsmd.getColumnCount();
+    while (resultSet.next()) {
+      for (int i = 1; i <= columnsNumber; i++) {
+        if (i > 1) System.out.print(",  ");
+        String columnValue = resultSet.getString(i);
+        System.out.print(columnValue + " " + rsmd.getColumnName(i));
+      }
+      System.out.println("");
+    }
+  }
+
   // check if a user exists, if not create a collection for them
   public boolean userExists(String user) {
     // TODO
@@ -332,14 +346,15 @@ public class DBController {
       Statement statement = connection.createStatement();
       ResultSet resultSet
               = statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = " + arid);
+      resultSet.next();
       System.out.println("Artist's name is: " + resultSet.getString("name"));
-      System.out.println("They produced the following albums:\n");
+      System.out.println("They published the following albums:\n");
       resultSet = statement.executeQuery("" +
-              "SELECT a.aid, a.title FROM Album a, PublishesAlbum p WHERE a.aid = p.aid AND p.arid = "+Integer.toString(arid));
+              "SELECT a.aid, a.title FROM \"Album\" a, \"PublishesAlbum\" p WHERE a.aid = p.aid AND p.arid = "+Integer.toString(arid));
       while(resultSet.next()) {
-        String title = resultSet.getString("a.title");
-        int aid = resultSet.getInt("a.aid");
-        System.out.println(title+"\t:\tid: "+Integer.toString(aid));
+        String title = resultSet.getString("title");
+        int aid = resultSet.getInt("aid");
+        System.out.println(title+"  :  id: "+Integer.toString(aid));
       }
       resultSet.close();
 
