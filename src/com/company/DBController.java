@@ -381,7 +381,7 @@ public class DBController {
           return;
         }
 
-        System.out.println(artist.getString("name") + ", produced the following albums:");
+        System.out.println(artist.getString("name") + ", published the following albums:");
         System.out.println("=================================================================");
 
         ResultSet albums =

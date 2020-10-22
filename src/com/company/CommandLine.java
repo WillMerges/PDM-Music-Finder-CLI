@@ -174,6 +174,7 @@ public class CommandLine {
             String flag = tokens.get(1);
             if(!flag.equals("-id")) {
                 playHelp();
+                return;
             }
             String id_str = tokens.get(2);
             int id = -1;
@@ -351,7 +352,7 @@ public class CommandLine {
     }
 
     private void exitHelp() {
-        System.out.println("Use exit, quit, or logout to terminate the application.");
+        System.out.println("Use exit or quit to terminate the application.");
     }
 
     private void logoutHelp() {
