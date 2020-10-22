@@ -276,6 +276,14 @@ public class DBController {
       ResultSet resultSet
               = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
       System.out.println("Artist's name is: " + resultSet.getString("name"));
+      System.out.println("They produced the following albums:\n");
+      resultSet = statement.executeQuery("" +
+              "SELECT a.aid, a.title FROM Album a, PublishesAlbum p WHERE a.aid = p.aid AND p.arid = "+Integer.toString(arid));
+      while(resultSet.next()) {
+        String title = resultSet.getString("a.title");
+        int aid = resultSet.getInt("a.aid");
+        System.out.println(title+"\t:\tid: "+Integer.toString(aid));
+      }
       resultSet.close();
 
     } catch (SQLException throwable) {
