@@ -428,12 +428,6 @@ public class DBController {
     }
   }
 
-  // display info about a song,album,or artist with name 'name'
-  public boolean dispInfo(String name) {
-    System.out.println("This function is not yet implemented yet, please use the id version.");
-    return false;
-  }
-
   // display a "last played" time
   public boolean dispSongInfo(int sid) {
     if (connection == null) {
