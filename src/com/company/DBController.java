@@ -615,6 +615,55 @@ public class DBController implements AutoCloseable {
 
   public void importSong() {
     // TODO
+    if (connection != null) {
+
+      // Create and execute the SQL query
+      try {
+        Scanner scan = new Scanner(System.in);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet;
+        System.out.println("Enter Song id");
+        int sid = scan.nextInt();
+        resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
+        while (resultSet.next()){
+          System.out.println("Song with that ID already exists please enter new ID");
+          sid = scan.nextInt();
+          resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
+        }
+        System.out.println("Enter Song Title");
+        String Title = scan.nextLine();
+        System.out.println("Enter Existing Album id");
+        int aid = scan.nextInt();
+        resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE aid = " + aid);
+        if(!resultSet.next()){
+          System.out.println("Please try import again with existing aid");
+        }
+        else{
+          resultSet = statement.executeQuery("SELECT \"track_num\" FROM \"Song\" WHERE aid = " + aid);
+          int i = 1;
+          while(resultSet.next()){
+            i++;
+          }
+          int trackNum = i;
+          System.out.println("Enter Song length (in seconds)");
+          int songLen = scan.nextInt();
+          PreparedStatement insertStatement =
+                  connection.prepareStatement("INSERT INTO \"Song\"(sid, title, track_num, length, aid) VALUES(?, ?)");
+          insertStatement.setObject(1, sid);
+          insertStatement.setObject(2, Title);
+          insertStatement.setObject(3, trackNum);
+          insertStatement.setObject(4, songLen);
+          insertStatement.setObject(5, aid);
+          insertStatement.execute();
+          insertStatement.close();
+
+        }
+        resultSet.close();
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
+    }
+
   }
 
   public void importArtist() {
