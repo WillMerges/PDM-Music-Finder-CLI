@@ -56,8 +56,7 @@ public class DBController {
       }
 
       statement.close();
-    }
-    catch (SQLException throwable) {
+    } catch (SQLException throwable) {
       System.out.println("userExists() has encountered an error!");
       throwable.printStackTrace();
     }
@@ -72,8 +71,10 @@ public class DBController {
 
     try {
       PreparedStatement insertUserStatement = connection.prepareStatement(insertUserSql);
-      PreparedStatement selectCollectionStatement = connection.prepareStatement(selectCollectionSql);
-      PreparedStatement insertCollectionStatement = connection.prepareStatement(insertCollectionSql);
+      PreparedStatement selectCollectionStatement =
+          connection.prepareStatement(selectCollectionSql);
+      PreparedStatement insertCollectionStatement =
+          connection.prepareStatement(insertCollectionSql);
 
       ResultSet idResult = selectCollectionStatement.executeQuery();
       int maxID = -1;
@@ -84,7 +85,7 @@ public class DBController {
 
       insertUserStatement.setString(1, user);
 
-      insertCollectionStatement.setInt(1, maxID+1);
+      insertCollectionStatement.setInt(1, maxID + 1);
       insertCollectionStatement.setString(2, user);
 
       insertUserStatement.executeUpdate();
@@ -93,8 +94,7 @@ public class DBController {
       insertUserStatement.close();
       selectCollectionStatement.close();
       insertCollectionStatement.close();
-    }
-    catch (SQLException throwable) {
+    } catch (SQLException throwable) {
       System.out.println("createUser() has encountered an error!");
       throwable.printStackTrace();
     }
@@ -228,89 +228,80 @@ public class DBController {
   }
 
   // add song to collection
-  public boolean addSong(String user, int sid) {
-    if (connection == null) {
-      return false;
-    }
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet =
-          statement.executeQuery(
-              "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
-      resultSet.next();
-      int cid = resultSet.getInt("cid");
-      resultSet.close();
-      PreparedStatement insertStatement =
-          connection.prepareStatement("INSERT INTO \"ConsistsOfSong\"(sid, cid) VALUES(?, ?)");
-      insertStatement.setObject(1, sid);
-      insertStatement.setObject(2, cid);
-      insertStatement.execute();
-      insertStatement.close();
+  public void addSong(String user, int sid) {
+    if (connection != null) {
+      try {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet =
+            statement.executeQuery(
+                "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+        resultSet.next();
+        int cid = resultSet.getInt("cid");
+        resultSet.close();
+        PreparedStatement insertStatement =
+            connection.prepareStatement("INSERT INTO \"ConsistsOfSong\"(sid, cid) VALUES(?, ?)");
+        insertStatement.setObject(1, sid);
+        insertStatement.setObject(2, cid);
+        insertStatement.execute();
+        insertStatement.close();
 
-    } catch (SQLException throwable) {
-      throwable.printStackTrace();
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
     }
-    return true;
   }
 
   // add album to collection
-  public boolean addAlbum(String user, int aid) {
-    if (connection == null) {
-      return false;
-    }
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet =
-          statement.executeQuery(
-              "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
-      resultSet.next();
-      int cid = resultSet.getInt("cid");
-      resultSet.close();
-      PreparedStatement insertStatement =
-          connection.prepareStatement("INSERT INTO \"ConsistsOfAlbum\"(aid, cid) VALUES(?, ?)");
-      insertStatement.setObject(1, aid);
-      insertStatement.setObject(2, cid);
-      insertStatement.execute();
-      insertStatement.close();
+  public void addAlbum(String user, int aid) {
+    if (connection != null) {
+      try {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet =
+            statement.executeQuery(
+                "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+        resultSet.next();
+        int cid = resultSet.getInt("cid");
+        resultSet.close();
+        PreparedStatement insertStatement =
+            connection.prepareStatement("INSERT INTO \"ConsistsOfAlbum\"(aid, cid) VALUES(?, ?)");
+        insertStatement.setObject(1, aid);
+        insertStatement.setObject(2, cid);
+        insertStatement.execute();
+        insertStatement.close();
 
-    } catch (SQLException throwable) {
-      throwable.printStackTrace();
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
     }
-    return true;
   }
 
   // add artist to collection
-  public boolean addArtist(String user, int arid) {
-    if (connection == null) {
-      return false;
-    }
-    try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet =
-          statement.executeQuery(
-              "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
-      resultSet.next();
-      int cid = resultSet.getInt("cid");
-      resultSet.close();
-      PreparedStatement insertStatement =
-          connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
-      insertStatement.setObject(1, arid);
-      insertStatement.setObject(2, cid);
-      insertStatement.execute();
-      insertStatement.close();
+  public void addArtist(String user, int arid) {
+    if (connection != null) {
+      try {
+        Statement statement = connection.createStatement();
+        ResultSet resultSet =
+            statement.executeQuery(
+                "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
+        resultSet.next();
+        int cid = resultSet.getInt("cid");
+        resultSet.close();
+        PreparedStatement insertStatement =
+            connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
+        insertStatement.setObject(1, arid);
+        insertStatement.setObject(2, cid);
+        insertStatement.execute();
+        insertStatement.close();
 
-    } catch (SQLException throwable) {
-      throwable.printStackTrace();
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
     }
-    return true;
   }
 
-  public boolean listCollection(String user) {
+  public void listCollection(String user) {
     // TODO
-    if (connection == null) {
-      return false;
-    }
-    return true;
+    if (connection == null) {}
   }
 
   public boolean listArtist(String artist) {
@@ -327,14 +318,16 @@ public class DBController {
     if (connection != null) {
       try {
         Statement statement = connection.createStatement();
-        ResultSet artist = statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = "+Integer.toString(arid));
+        ResultSet artist =
+            statement.executeQuery(
+                "SELECT name FROM \"Artist\" WHERE arid = " + Integer.toString(arid));
 
-        if(!artist.next()) {
-          System.out.println("No artist with id: "+Integer.toString(arid)+"\n");
+        if (!artist.next()) {
+          System.out.println("No artist with id: " + Integer.toString(arid) + "\n");
           return;
         }
 
-        System.out.println(artist.getString("name")+", produced the following albums:");
+        System.out.println(artist.getString("name") + ", produced the following albums:");
         System.out.println("=================================================================");
 
         ResultSet albums =
@@ -343,7 +336,7 @@ public class DBController {
                     + arid
                     + " AND A.aid = P.aid");
         while (albums.next()) {
-          System.out.println(albums.getString("title")+"  --  id:"+albums.getInt("aid"));
+          System.out.println(albums.getString("title") + "  --  id:" + albums.getInt("aid"));
         }
         System.out.println("=================================================================");
       } catch (SQLException throwables) {
