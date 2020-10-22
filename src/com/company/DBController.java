@@ -59,7 +59,7 @@ public class DBController {
           System.out.println("Unable to play " + song);
         } else if (numResults == 1) {
           System.out.println("Played " + song);
-          // TODO check this properly inserts
+          // Insert the play record entry
           int sid = resultSet.getInt("sid");
           PreparedStatement insertStatement =
               connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
@@ -104,7 +104,7 @@ public class DBController {
               if (resultSet.getInt("sid") == sid) {
                 System.out.println("Played song: " + resultSet.getString("title"));
                 songPlayed = true;
-                // TODO check that this correctly inserts a PlayRecord entry
+                // Insert the play record entry
                 PreparedStatement insertStatement =
                     connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
                 insertStatement.setObject(1, username);
@@ -130,7 +130,6 @@ public class DBController {
   }
 
   public void playSong(int sid, String username) {
-    // TODO
     if (connection != null) {
       try {
         Statement statement = connection.createStatement();
@@ -147,7 +146,7 @@ public class DBController {
           System.out.println(sid + " is not a valid song sid within the database");
         } else if (numResults == 1) {
           System.out.println("Played the song of sid: " + sid);
-          // TODO check this properly inserts
+          // Insert the play record entry
           PreparedStatement insertStatement =
               connection.prepareStatement(
                   "INSERT INTO \"PlayRecords\" (username, sid, time) VALUES (?, ?, ?)");
