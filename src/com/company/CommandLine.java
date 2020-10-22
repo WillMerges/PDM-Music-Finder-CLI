@@ -314,6 +314,9 @@ public class CommandLine {
             case "logout":
                 logoutHelp();
                 break;
+            case "help":
+                System.out.println("You have already found what you seek...");
+                break;
             default:
                 System.out.println(modifier + " is not a recognized command. Can't help you there.");
                 break;

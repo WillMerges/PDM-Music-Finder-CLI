@@ -358,16 +358,6 @@ public class DBController {
     }
   }
 
-  public boolean listArtist(String artist) {
-    System.out.println("This function is not yet implemented yet, please use the id version.");
-    return false;
-  }
-
-  public boolean listAlbum(String album) {
-    System.out.println("This function is not yet implemented yet, please use the id version.");
-    return false;
-  }
-
   public void listArtist(int arid) {
     if (connection != null) {
       try {
@@ -427,9 +417,9 @@ public class DBController {
           statement.executeQuery("SELECT \"title\" FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
       System.out.println("Title: " + resultSet.getString("title"));
-      resultSet = statement.executeQuery("SELECT \"trackNum\" FROM \"Song\" WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT \"track_num\" FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
-      int trackNum = resultSet.getInt("TrackNum");
+      int trackNum = resultSet.getInt("track_num");
       resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
       int aid = resultSet.getInt("aid");
@@ -443,7 +433,7 @@ public class DBController {
       resultSet.next();
       System.out.println("Album: " + resultSet.getString("title"));
       System.out.println("Track Number: " + trackNum);
-      resultSet = statement.executeQuery("SELECT \"time\" FROM \"PlayRecords\" WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT \"time\" FROM \"PlayRecords\" WHERE sid = " + sid+" ORDER BY time DESC");
       if (resultSet.next()) {
         System.out.println("Last played: " + resultSet.getTimestamp("time"));
       } else {
@@ -667,7 +657,7 @@ public class DBController {
     return true;
   }
 
-  public void importSong() {
+  public boolean importSong() {
     // TODO
     if (connection != null) {
 
@@ -702,7 +692,7 @@ public class DBController {
           System.out.println("Enter Song length (in seconds)");
           int songLen = scan.nextInt();
           PreparedStatement insertStatement =
-                  connection.prepareStatement("INSERT INTO \"Song\"(sid, title, track_num, length, aid) VALUES(?, ?)");
+                  connection.prepareStatement("INSERT INTO \"Song\"(sid, title, track_num, length, aid) VALUES(?, ?, ?, ?, ?)");
           insertStatement.setObject(1, sid);
           insertStatement.setObject(2, Title);
           insertStatement.setObject(3, trackNum);
@@ -717,6 +707,7 @@ public class DBController {
         throwable.printStackTrace();
       }
     }
+    return true;
   }
 
   public boolean importArtist() {
