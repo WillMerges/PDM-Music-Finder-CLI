@@ -316,21 +316,32 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted sid
       ResultSet resultSet =
-              statement.executeQuery("SELECT Title FROM Song WHERE sid = " + sid);
+              statement.executeQuery("SELECT \"Title\" FROM \"Song\" WHERE sid = " + sid);
+      resultSet.next();
       System.out.println("Title: " + resultSet.getString("Title"));
-      resultSet = statement.executeQuery("SELECT TrackNum FROM Song WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT \"TrackNum\" FROM \"Song\" WHERE sid = " + sid);
+      resultSet.next();
       int trackNum = resultSet.getInt("TrackNum");
-      resultSet = statement.executeQuery("SELECT aid FROM Song WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE sid = " + sid);
+      resultSet.next();
       int aid = resultSet.getInt("aid");
-      resultSet = statement.executeQuery("SELECT arid FROM PublishesAlbum WHERE aid = " + aid);
+      resultSet = statement.executeQuery("SELECT arid FROM \"PublishesAlbum\" WHERE aid = " + aid);
+      resultSet.next();
       int arid = resultSet.getInt("arid");
-      resultSet = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
+      resultSet = statement.executeQuery("SELECT \"name\" FROM \"Artist\" WHERE arid = " + arid);
+      resultSet.next();
       System.out.println("Artist: " + resultSet.getString("name"));
-      resultSet = statement.executeQuery("SELECT title FROM Album WHERE aid = " + aid);
-      System.out.print("Album: " + resultSet.getString("title"));
-      System.out.println("Track Number:" + trackNum);
-      resultSet = statement.executeQuery("SELECT Time FROM PlayRecords WHERE sid = " + sid);
-      System.out.println("Last played: " + resultSet.getTimestamp("Time"));
+      resultSet = statement.executeQuery("SELECT \"title\" FROM \"Album\" WHERE aid = " + aid);
+      resultSet.next();
+      System.out.println("Album: " + resultSet.getString("title"));
+      System.out.println("Track Number: " + trackNum);
+      resultSet = statement.executeQuery("SELECT \"Time\" FROM \"PlayRecords\" WHERE sid = " + sid);
+      if( resultSet.next()) {
+        System.out.println("Last played: " + resultSet.getTimestamp("Time"));
+      }
+      else{
+        System.out.println("Never been played");
+      }
       resultSet.close();
 
     } catch (SQLException throwable) {
@@ -378,13 +389,17 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted title
       ResultSet resultSet =
-              statement.executeQuery("SELECT Title FROM Album WHERE aid = " + aid);
-      System.out.print("Album's title is: " + resultSet.getString("title"));
-      resultSet = statement.executeQuery("SELECT releasedate FROM Album WHERE aid = " + aid);
-      System.out.println(" and the release date is: " + resultSet.getDate("releasedate"));
-      resultSet = statement.executeQuery("SELECT arid FROM PublishesAlbum WHERE aid = " + aid);
+              statement.executeQuery("SELECT \"title\" FROM \"Album\" WHERE aid = " + aid);
+      resultSet.next();
+      System.out.println("Title: " + resultSet.getString("title"));
+      resultSet = statement.executeQuery("SELECT \"releasedate\" FROM \"Album\" WHERE aid = " + aid);
+      resultSet.next();
+      System.out.println("Release date: " + resultSet.getDate("releasedate"));
+      resultSet = statement.executeQuery("SELECT arid FROM \"PublishesAlbum\" WHERE aid = " + aid);
+      resultSet.next();
       int arid = resultSet.getInt("arid");
-      resultSet = statement.executeQuery("SELECT name FROM Artist WHERE arid = " + arid);
+      resultSet = statement.executeQuery("SELECT \"name\" FROM \"Artist\" WHERE arid = " + arid);
+      resultSet.next();
       System.out.println("Artist: " + resultSet.getString("name"));
       resultSet.close();
 
@@ -405,19 +420,37 @@ public class DBController {
     }
     // Create and execute the SQL query
     try {
+      int i = 0;
       Statement statement = connection.createStatement();
       ResultSet resultSet =
-              statement.executeQuery("SELECT arid FROM Artist WHERE name = " + tok);
+              statement.executeQuery("SELECT arid FROM \"Artist\" WHERE \"name\" = \'" + tok +"\'");
       while (resultSet.next()){
+        ++i;
+        System.out.println();
         dispArtistInfo(resultSet.getInt("arid"));
       }
-      resultSet = statement.executeQuery("SELECT aid FROM Album WHERE Title = " + tok);
+      if (i > 0) {
+        System.out.println(i + " Artist Results");
+        i = 0;
+      }
+      resultSet = statement.executeQuery("SELECT aid FROM \"Album\" WHERE \"title\" = \'" + tok +"\'");
       while (resultSet.next()){
+        ++i;
+        System.out.println();
         dispAlbumInfo(resultSet.getInt("aid"));
       }
-      resultSet = statement.executeQuery("SELECT sid FROM Song WHERE Title = " + tok);
+      if (i > 0) {
+        System.out.println(i + " Album Results");
+        i = 0;
+      }
+      resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE \"Title\" = \'" + tok +"\'");
       while (resultSet.next()){
+        ++i;
+        System.out.println();
         dispSongInfo(resultSet.getInt("sid"));
+      }
+      if (i > 0) {
+        System.out.println(i + " Song Results");
       }
       resultSet.close();
 
