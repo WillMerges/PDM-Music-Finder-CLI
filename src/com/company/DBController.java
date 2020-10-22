@@ -155,18 +155,75 @@ public class DBController {
   // add song to collection
   public boolean addSong(String user, int sid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet resultSet
+              = statement.executeQuery("SELECT cid FROM Collection WHERE Username = " + user);
+      int cid = resultSet.getInt("cid");
+      resultSet.close();
+      PreparedStatement insertStatement =
+              connection.prepareStatement("INSERT INTO ConsistsOfSong VALUES ?, ?");
+      insertStatement.setObject(1, sid);
+      insertStatement.setObject(2, cid);
+      insertStatement.execute();
+      insertStatement.close();
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
     return true;
   }
 
   // add album to collection
   public boolean addAlbum(String user, int aid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet resultSet
+              = statement.executeQuery("SELECT cid FROM Collection WHERE Username = " + user);
+      int cid = resultSet.getInt("cid");
+      resultSet.close();
+      PreparedStatement insertStatement =
+              connection.prepareStatement("INSERT INTO ConsistsOfAlbum VALUES ?, ?");
+      insertStatement.setObject(1, aid);
+      insertStatement.setObject(2, cid);
+      insertStatement.execute();
+      insertStatement.close();
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
     return true;
   }
 
   // add artist to collection
   public boolean addArtist(String user, int arid) {
     // TODO
+    if (connection == null) {
+      return false;
+    }
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet resultSet
+              = statement.executeQuery("SELECT cid FROM Collection WHERE Username = " + user);
+      int cid = resultSet.getInt("cid");
+      resultSet.close();
+      PreparedStatement insertStatement =
+              connection.prepareStatement("INSERT INTO ConsistsOfArtist VALUES ?, ?");
+      insertStatement.setObject(1, arid);
+      insertStatement.setObject(2, cid);
+      insertStatement.execute();
+      insertStatement.close();
+
+    } catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
     return true;
   }
 
