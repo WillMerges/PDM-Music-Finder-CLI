@@ -1,6 +1,5 @@
 package com.company;
 
-import java.io.Closeable;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Scanner;
