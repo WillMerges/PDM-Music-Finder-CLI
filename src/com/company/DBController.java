@@ -321,27 +321,32 @@ public class DBController {
       ResultSet albumResults = albumStatement.executeQuery();
       ResultSet artistResults = artistStatement.executeQuery();
 
-      System.out.println("Your collection includes the following:");
-      System.out.println("=================================================================");
+      System.out.println("Your collection includes the following:\n");
+
       System.out.println("Songs:");
+      System.out.println("=================================================================");
       while (songResults.next()) {
         int sid = songResults.getInt("sid");
         String title = songResults.getString("title");
 
         System.out.println(title+"  --  id: "+sid);
       }
-
       System.out.println("=================================================================");
+      System.out.println();
+
       System.out.println("Albums:");
+      System.out.println("=================================================================");
       while (albumResults.next()) {
         int aid = albumResults.getInt("aid");
         String title = albumResults.getString("title");
 
         System.out.println(title+"  --  id: "+aid);
       }
-
       System.out.println("=================================================================");
+      System.out.println();
+
       System.out.println("Artists:");
+      System.out.println("=================================================================");
       while (artistResults.next()) {
         int arid = artistResults.getInt("arid");
         String name = artistResults.getString("name");
@@ -349,7 +354,8 @@ public class DBController {
         System.out.println(name+"  --  id: "+arid);
       }
       System.out.println("=================================================================");
-      
+      System.out.println();
+
       songStatement.close();
       albumStatement.close();
       artistStatement.close();
