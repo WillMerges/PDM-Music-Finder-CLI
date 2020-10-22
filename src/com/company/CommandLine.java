@@ -69,6 +69,14 @@ public class CommandLine {
         exit = false; // reset for next loop
     }
 
+    private String concatRest(int n) {
+        String ret = "";
+        for(int i = n; i < tokens.size(); i++) {
+            ret += tokens.get(i) + " ";
+        }
+        return ret.trim();
+    }
+
     private void parseTokens() {
         String first = tokens.get(0).toLowerCase().trim();
 
@@ -190,54 +198,41 @@ public class CommandLine {
         if (tokens.size() == 1) {
             db.listCollection(user);
             return;
-        } else if (tokens.size() == 3) {
-            String second = tokens.get(1).toLowerCase().trim();
-            String third = tokens.get(2).toLowerCase().trim();
-            if (second.equals("artist")) {
-                db.listArtist(third);
-                return;
-            } else if (second.equals("album")) {
-                db.listAlbum(third);
-                return;
+        } else if(tokens.size() == 3) {
+            String id_str = tokens.get(2);
+            int id = -1;
+            try {
+                id = Integer.parseInt(id_str);
+            } catch (final NumberFormatException e) {
+                System.out.println("Song id must be an integer!");
             }
-        } else if(tokens.size() == 4) {
-            if(tokens.get(2).equals("-id")) {
-                String id_str = tokens.get(3);
-                int id = -1;
-                try {
-                    id = Integer.parseInt(id_str);
-                } catch (final NumberFormatException e) {
-                    System.out.println("Song id must be an integer!");
-                }
 
-                if(tokens.get(1).equals("album")) {
-                    db.listAlbum(id);
-                    return;
-                } else if(tokens.get(1).equals("artist")) {
-                    db.listArtist(id);
-                    return;
-                }
+            if(tokens.get(1).equals("album")) {
+                db.listAlbum(id);
+                return;
+            } else if(tokens.get(1).equals("artist")) {
+                db.listArtist(id);
+                return;
             }
         }
         listHelp();
     }
 
     private void searchOptions() {
-        if(tokens.size() == 2) {
-            db.search(tokens.get(1));
-        } else if(tokens.size() == 3 && tokens.get(1).equals("collection")) {
-            db.searchCollection(user, tokens.get(2));
-        } else {
+        if(tokens.size() < 2) {
             searchHelp();
+            return;
+        }
+        if(tokens.get(1).equals("collection")) {
+            db.searchCollection(user, concatRest(2));
+        } else {
+            db.search(concatRest(1));
         }
     }
 
     private void infoOptions() {
         // NOTE: song, album, artist names can't start with '-' (currently)
-        if(tokens.size() == 2 && !tokens.get(1).startsWith("-")) {
-            db.dispInfo(tokens.get(1));
-            return;
-        } else if(tokens.size() == 3) {
+        if(tokens.size() >= 3) {
             String id_str = tokens.get(2);
             int id = -1;
             try {
@@ -257,8 +252,6 @@ public class CommandLine {
                 return;
             }
         }
-
-        //Seems like this belongs more in the help message to me
         infoHelp();
     }
 

@@ -313,16 +313,6 @@ public class DBController {
     return true;
   }
 
-  public boolean listArtist(String artist) {
-    System.out.println("This function is not yet implemented yet, please use the id version.");
-    return false;
-  }
-
-  public boolean listAlbum(String album) {
-    System.out.println("This function is not yet implemented yet, please use the id version.");
-    return false;
-  }
-
   public void listArtist(int arid) {
     if (connection != null) {
       try {
@@ -365,7 +355,7 @@ public class DBController {
       System.out.println("=================================================================");
 
       result = statement.executeQuery("SELECT s.sid, s.title, s.track_num FROM \"Song\" s, \"Album\" a " +
-              "WHERE a.aid = s.sid AND a.aid = "+Integer.toString(aid)+
+              "WHERE a.aid = s.aid AND a.aid = "+Integer.toString(aid) +
               " ORDER BY s.track_num ASC");
       while(result.next()) {
         System.out.println(result.getInt("track_num")+": "+result.getString("title")+"  --  id: "+result.getInt("sid"));
@@ -374,13 +364,6 @@ public class DBController {
     } catch (SQLException e) {
       e.printStackTrace();
     }
-
-  }
-
-  // display info about a song,album,or artist with name 'name'
-  public boolean dispInfo(String name) {
-    System.out.println("This function is not yet implemented yet, please use the id version.");
-    return false;
   }
 
   // display a "last played" time
