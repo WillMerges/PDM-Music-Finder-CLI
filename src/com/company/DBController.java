@@ -168,7 +168,6 @@ public class DBController {
 
   // add song to collection
   public boolean addSong(String user, int sid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -194,7 +193,6 @@ public class DBController {
 
   // add album to collection
   public boolean addAlbum(String user, int aid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -220,7 +218,6 @@ public class DBController {
 
   // add artist to collection
   public boolean addArtist(String user, int arid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -248,19 +245,19 @@ public class DBController {
 
   // remove song from collection
   public boolean removeSong(String user, int sid) {
-    // TODO
+    System.out.println("This function is not yet implemented!");
     return true;
   }
 
   // remove album from collection
   public boolean removeAlbum(String user, int aid) {
-    // TODO
+    System.out.println("This function is not yet implemented!");
     return true;
   }
 
   // remove artist from eollection
   public boolean removeArtist(String user, int arid) {
-    // TODO
+    System.out.println("This function is not yet implemented!");
     return true;
   }
 
@@ -306,7 +303,6 @@ public class DBController {
 
   // display a "last played" time
   public boolean dispSongInfo(int sid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -351,7 +347,6 @@ public class DBController {
   }
 
   public boolean dispArtistInfo(int arid) {
-    //TODO
     if (connection == null) {
       return false;
     }
@@ -368,7 +363,7 @@ public class DBController {
       while(resultSet.next()) {
         String title = resultSet.getString("title");
         int aid = resultSet.getInt("aid");
-        System.out.println(title+"  :  id: "+Integer.toString(aid));
+        System.out.println(title+"  ---  id: "+Integer.toString(aid));
       }
       resultSet.close();
 
@@ -380,7 +375,6 @@ public class DBController {
   }
 
   public boolean dispAlbumInfo(int aid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -421,24 +415,31 @@ public class DBController {
       ResultSet resultSet =
               statement.executeQuery("SELECT arid, name FROM \"Artist\" WHERE \"name\" LIKE \'%" + tok +"%\'");
       System.out.println("Artist Results:");
+      System.out.println("=================================================================");
       while (resultSet.next()){
-        System.out.println(resultSet.getString("name")+"  :  id: "+Integer.toString(resultSet.getInt("arid")));
+        System.out.println(resultSet.getString("name")+"  --  id: "+Integer.toString(resultSet.getInt("arid")));
       }
+      System.out.println("=================================================================");
       System.out.println();
 
       // Album Search
       resultSet = statement.executeQuery("SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok +"%\'");
       System.out.println("Album Results:");
+      System.out.println("=================================================================");
       while (resultSet.next()){
-        System.out.println(resultSet.getString("title")+"  :  id: "+Integer.toString(resultSet.getInt("aid")));
+        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("aid")));
       }
+      System.out.println("=================================================================");
       System.out.println();
 
       // Song Search
       resultSet = statement.executeQuery("SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok +"%\'");
+      System.out.println("Song Results:");
+      System.out.println("=================================================================");
       while (resultSet.next()){
-        System.out.println(resultSet.getString("title")+"  :  id: "+Integer.toString(resultSet.getInt("sid")));
+        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("sid")));
       }
+      System.out.println("=================================================================");
       System.out.println();
 
       resultSet.close();
