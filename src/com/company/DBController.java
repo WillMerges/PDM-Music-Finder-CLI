@@ -16,7 +16,7 @@ public class DBController {
               "ieshoocaiDeipi0iev1v");
 
     } catch (SQLException throwable) {
-      throwable.printStackTrace();
+      System.out.println("Unable to connect to DB, please check you are on the correct network then try again.");
       System.exit(0);
     }
   }
@@ -170,7 +170,6 @@ public class DBController {
 
   // add song to collection
   public boolean addSong(String user, int sid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -197,7 +196,6 @@ public class DBController {
 
   // add album to collection
   public boolean addAlbum(String user, int aid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -224,7 +222,6 @@ public class DBController {
 
   // add artist to collection
   public boolean addArtist(String user, int arid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -253,19 +250,19 @@ public class DBController {
 
   // remove song from collection
   public boolean removeSong(String user, int sid) {
-    // TODO
+    System.out.println("This function is not yet implemented!");
     return true;
   }
 
   // remove album from collection
   public boolean removeAlbum(String user, int aid) {
-    // TODO
+    System.out.println("This function is not yet implemented!");
     return true;
   }
 
   // remove artist from eollection
   public boolean removeArtist(String user, int arid) {
-    // TODO
+    System.out.println("This function is not yet implemented!");
     return true;
   }
 
@@ -311,7 +308,6 @@ public class DBController {
 
   // display a "last played" time
   public boolean dispSongInfo(int sid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -321,10 +317,10 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted sid
       ResultSet resultSet =
-          statement.executeQuery("SELECT \"Title\" FROM \"Song\" WHERE sid = " + sid);
+          statement.executeQuery("SELECT \"title\" FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
-      System.out.println("Title: " + resultSet.getString("Title"));
-      resultSet = statement.executeQuery("SELECT \"TrackNum\" FROM \"Song\" WHERE sid = " + sid);
+      System.out.println("Title: " + resultSet.getString("title"));
+      resultSet = statement.executeQuery("SELECT \"trackNum\" FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
       int trackNum = resultSet.getInt("TrackNum");
       resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE sid = " + sid);
@@ -340,9 +336,9 @@ public class DBController {
       resultSet.next();
       System.out.println("Album: " + resultSet.getString("title"));
       System.out.println("Track Number: " + trackNum);
-      resultSet = statement.executeQuery("SELECT \"Time\" FROM \"PlayRecords\" WHERE sid = " + sid);
+      resultSet = statement.executeQuery("SELECT \"time\" FROM \"PlayRecords\" WHERE sid = " + sid);
       if (resultSet.next()) {
-        System.out.println("Last played: " + resultSet.getTimestamp("Time"));
+        System.out.println("Last played: " + resultSet.getTimestamp("time"));
       } else {
         System.out.println("Never been played");
       }
@@ -355,7 +351,6 @@ public class DBController {
   }
 
   public boolean dispArtistInfo(int arid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -375,7 +370,7 @@ public class DBController {
       while (resultSet.next()) {
         String title = resultSet.getString("title");
         int aid = resultSet.getInt("aid");
-        System.out.println(title + "  :  id: " + Integer.toString(aid));
+        System.out.println(title + "  ---  id: " + Integer.toString(aid));
       }
       resultSet.close();
 
@@ -387,7 +382,6 @@ public class DBController {
   }
 
   public boolean dispAlbumInfo(int aid) {
-    // TODO
     if (connection == null) {
       return false;
     }
@@ -419,49 +413,44 @@ public class DBController {
 
   // search for anything matching string tok
   public boolean search(String tok) {
-    // TODO
-    // return all id'scanner of albums, artists, songs matching name
-    // then call dispInfo
-    // profit
     if (connection == null) {
       return false;
     }
     // Create and execute the SQL query
     try {
-      int i = 0;
+      // Artist Search
       Statement statement = connection.createStatement();
       ResultSet resultSet =
-          statement.executeQuery("SELECT arid FROM \"Artist\" WHERE \"name\" = \'" + tok + "\'");
+          statement.executeQuery("SELECT arid, name FROM \"Artist\" WHERE \"name\" LIKE \'%" + tok + "%\'");
+      System.out.println("Artist Results:");
+      System.out.println("=================================================================");
       while (resultSet.next()) {
-        ++i;
-        System.out.println();
-        dispArtistInfo(resultSet.getInt("arid"));
+        System.out.println(resultSet.getString("name")+"  --  id: "+Integer.toString(resultSet.getInt("arid")));
       }
-      if (i > 0) {
-        System.out.println(i + " Artist Results");
-        i = 0;
-      }
+      System.out.println("=================================================================");
+      System.out.println();
+
+      // Album Search
       resultSet =
-          statement.executeQuery("SELECT aid FROM \"Album\" WHERE \"title\" = \'" + tok + "\'");
+          statement.executeQuery("SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok + "%\'");
+      System.out.println("Album Results:");
+      System.out.println("=================================================================");
       while (resultSet.next()) {
-        ++i;
-        System.out.println();
-        dispAlbumInfo(resultSet.getInt("aid"));
+        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("aid")));
       }
-      if (i > 0) {
-        System.out.println(i + " Album Results");
-        i = 0;
-      }
+      System.out.println("=================================================================");
+      System.out.println();
+
+      // Song Search
       resultSet =
-          statement.executeQuery("SELECT sid FROM \"Song\" WHERE \"Title\" = \'" + tok + "\'");
+          statement.executeQuery("SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok + "%\'");
+      System.out.println("Song Results:");
+      System.out.println("=================================================================");
       while (resultSet.next()) {
-        ++i;
-        System.out.println();
-        dispSongInfo(resultSet.getInt("sid"));
+        System.out.println(resultSet.getString("title")+"  --  id: "+Integer.toString(resultSet.getInt("sid")));
       }
-      if (i > 0) {
-        System.out.println(i + " Song Results");
-      }
+      System.out.println("=================================================================");
+      System.out.println();
       resultSet.close();
 
     } catch (SQLException throwable) {
@@ -470,9 +459,9 @@ public class DBController {
     return true;
   }
 
-  // search a user'scanner collection
+  // search a user collection
   public boolean searchCollection(String user, String tok) {
-    // TODO
+
     return true;
   }
 
