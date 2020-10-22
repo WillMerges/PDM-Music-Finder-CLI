@@ -298,12 +298,24 @@ public class DBController {
     return false;
   }
 
-  public boolean listArtist(int arid) {
-    // TODO
-    if (connection == null) {
-      return false;
+  public void listArtist(int arid) {
+    // TODO check logic
+    if (connection != null) {
+      try {
+        Statement statement = connection.createStatement();
+        ResultSet albums =
+            statement.executeQuery(
+                "SELECT \"A.aid, A.title\" FROM \"PublishesAlbum P, Album A\" WHERE \"(P.arid = "
+                    + arid
+                    + ")\" AND \"(A.aid = P.aid)\"");
+        while (albums.next()) {
+          System.out.println(
+              "AID: " + albums.getString("aid") + ", Title: " + albums.getString("title"));
+        }
+      } catch (SQLException throwables) {
+        throwables.printStackTrace();
+      }
     }
-    return true;
   }
 
   public boolean listAlbum(int aid) {
