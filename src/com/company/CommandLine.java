@@ -26,8 +26,15 @@ public class CommandLine {
         System.out.println("Welcome! Please enter your username to log in.");
         System.out.print("Username: ");
         user = scanner.nextLine();
-        System.out.println("Welcome, "+user+"!\n" +
-                "Please enter a command. For a list of possible commands, type 'help', and hit Enter.");
+
+        System.out.println("Welcome, " + user + "!");
+        if (!db.userExists(user)) {
+            System.out.println("It seems like this is your first time here, so let's get you set up!");
+            db.createUser(user);
+            System.out.println("Setup complete!");
+        }
+
+        System.out.println("Please enter a command. For a list of possible commands, type 'help', and hit Enter.");
 
         while(!exit) {
             System.out.print("--> ");

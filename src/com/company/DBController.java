@@ -36,23 +36,65 @@ public class DBController {
     }
   }
 
-  // check if a user exists, if not create a collection for them
+  // check if a user exists in the database
   public boolean userExists(String user) {
-    // TODO
+    boolean found = false;
+    String sql = "SELECT username FROM \"User\" WHERE username = ?";
+
     try {
-      Statement statement = connection.createStatement();
-      ResultSet resultSet =
-          statement.executeQuery("SELECT \"username\" FROM \"User\" WHERE \"username\" = " + user);
+      PreparedStatement statement = connection.prepareStatement(sql);
+      statement.setString(1, user);
+
+      ResultSet resultSet = statement.executeQuery();
 
       while (resultSet.next()) {
-        if (resultSet.getString("username").equals(user)) {
-          return true;
+        String foundName = resultSet.getString("username");
+
+        if (user.equals(foundName)) {
+          found = true;
         }
       }
-    } catch (SQLException throwables) {
-      throwables.printStackTrace();
+    } catch (SQLException throwable) {
+      System.out.println("userExists() has encountered an error!");
+      throwable.printStackTrace();
     }
-    return false;
+    return found;
+  }
+
+  // Create a new user and add them to the User and Collection tables of the database.
+  public void createUser(String user) {
+    String insertUserSql = "INSERT INTO \"User\" (username) VALUES (?)";
+    String selectCollectionSql = "SELECT MAX(cid) FROM \"Collection\"";
+    String insertCollectionSql = "INSERT INTO \"Collection\" (cid, username) VALUES (?,?)";
+
+    try {
+      PreparedStatement insertUserStatement = connection.prepareStatement(insertUserSql);
+      PreparedStatement selectCollectionStatement = connection.prepareStatement(selectCollectionSql);
+      PreparedStatement insertCollectionStatement = connection.prepareStatement(insertCollectionSql);
+
+      ResultSet idResult = selectCollectionStatement.executeQuery();
+      int maxID = -1;
+
+      while (idResult.next()) {
+        maxID = idResult.getInt("max");
+      }
+
+      insertUserStatement.setString(1, user);
+
+      insertCollectionStatement.setInt(1, maxID+1);
+      insertCollectionStatement.setString(2, user);
+
+      insertUserStatement.executeUpdate();
+      insertCollectionStatement.executeUpdate();
+
+      insertUserStatement.close();
+      selectCollectionStatement.close();
+      insertCollectionStatement.close();
+    }
+    catch (SQLException throwable) {
+      System.out.println("createUser() has encountered an error!");
+      throwable.printStackTrace();
+    }
   }
 
   public void playSong(String song, String username) {
