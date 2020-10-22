@@ -161,11 +161,11 @@ public class DBController {
     try {
       Statement statement = connection.createStatement();
       ResultSet resultSet
-              = statement.executeQuery("SELECT cid FROM Collection WHERE Username = " + user);
+              = statement.executeQuery("SELECT cid FROM \"Collection\" WHERE Username = " + user);
       int cid = resultSet.getInt("cid");
       resultSet.close();
       PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO ConsistsOfSong VALUES ?, ?");
+              connection.prepareStatement("INSERT INTO \"ConsistsOfSong\" VALUES ?, ?");
       insertStatement.setObject(1, sid);
       insertStatement.setObject(2, cid);
       insertStatement.execute();
@@ -186,11 +186,11 @@ public class DBController {
     try {
       Statement statement = connection.createStatement();
       ResultSet resultSet
-              = statement.executeQuery("SELECT cid FROM Collection WHERE Username = " + user);
+              = statement.executeQuery("SELECT cid FROM \"Collection\" WHERE Username = " + user);
       int cid = resultSet.getInt("cid");
       resultSet.close();
       PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO ConsistsOfAlbum VALUES ?, ?");
+              connection.prepareStatement("INSERT INTO \"ConsistsOfAlbum\" VALUES ?, ?");
       insertStatement.setObject(1, aid);
       insertStatement.setObject(2, cid);
       insertStatement.execute();
@@ -211,11 +211,11 @@ public class DBController {
     try {
       Statement statement = connection.createStatement();
       ResultSet resultSet
-              = statement.executeQuery("SELECT cid FROM Collection WHERE Username = " + user);
+              = statement.executeQuery("SELECT cid FROM \"Collection\" WHERE Username = " + user);
       int cid = resultSet.getInt("cid");
       resultSet.close();
       PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO ConsistsOfArtist VALUES ?, ?");
+              connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\" VALUES ?, ?");
       insertStatement.setObject(1, arid);
       insertStatement.setObject(2, cid);
       insertStatement.execute();
