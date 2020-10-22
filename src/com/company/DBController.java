@@ -234,7 +234,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         ResultSet resultSet =
             statement.executeQuery(
-                "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+                "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
         resultSet.next();
         int cid = resultSet.getInt("cid");
         resultSet.close();
@@ -258,7 +258,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         ResultSet resultSet =
             statement.executeQuery(
-                "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+                "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
         resultSet.next();
         int cid = resultSet.getInt("cid");
         resultSet.close();
