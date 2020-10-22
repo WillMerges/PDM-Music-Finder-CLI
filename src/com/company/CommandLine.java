@@ -241,13 +241,13 @@ public class CommandLine {
                 System.out.println("id must be an integer!");
                 return;
             }
-            if (tokens.get(1).equals("-song")) {
+            if (tokens.get(1).equals("song")) {
                 db.dispSongInfo(id);
                 return;
-            } else if (tokens.get(1).equals("-artist")) {
+            } else if (tokens.get(1).equals("artist")) {
                 db.dispArtistInfo(id);
                 return;
-            } else if (tokens.get(1).equals("-album")) {
+            } else if (tokens.get(1).equals("album")) {
                 db.dispAlbumInfo(id);
                 return;
             }
@@ -284,27 +284,35 @@ public class CommandLine {
 
         switch (modifier) {
             case "play":
+                System.out.println("The play command let's you play a song.");
                 playHelp();
                 break;
             case "info":
+                System.out.println("The info command let's you see information about a song, album, or artist.");
                 infoHelp();
                 break;
             case "list":
+                System.out.println("The list command let's you list songs in an album or albums from an artist.");
                 listHelp();
                 break;
             case "search":
+                System.out.println("The search command let's you search the entire database or just your collection.");
                 searchHelp();
                 break;
             case "add":
+                System.out.println("The add command let's you add songs, artists, and albums to your collection.");
                 addHelp();
                 break;
             case "import":
+                System.out.println("Import let's you add songs, albums, and artists to the database.");
                 importHelp();
                 break;
             case "exit":
             case "quit":
-            case "logout":
                 exitHelp();
+                break;
+            case "logout":
+                logoutHelp();
                 break;
             default:
                 System.out.println(modifier + " is not a recognized command. Can't help you there.");
@@ -318,16 +326,14 @@ public class CommandLine {
 
     private void infoHelp() {
         System.out.println("The info command can be used in the following ways:");
-        System.out.println("\tinfo search_name");
-        System.out.println("\tinfo -song song_id");
-        System.out.println("\tinfo -album album_id");
-        System.out.println("\tinfo -artist artist_id");
+        System.out.println("\tinfo song song_id");
+        System.out.println("\tinfo album album_id");
+        System.out.println("\tinfo artist artist_id");
     }
 
     private void listHelp() {
-        System.out.println("The list command must be in the form: list [<album | artist> <-id id | name>]\n" +
-                "If no album/artist is specified, it will display the logged in user's collection.\n" +
-                "The -id flag can be used to specify an integer id rather than a name.");
+        System.out.println("The list command must be in the form: list [<album | artist> <id>]\n" +
+                "If no album/artist is specified, it will display the logged in user's collection.");
     }
 
     private void searchHelp() {
@@ -335,13 +341,18 @@ public class CommandLine {
     }
 
     private void addHelp() {
-        //System.out.println("The add command is used to add a song, album or artist to your collection.");
         System.out.println("The add command must be in the form: add <-song | -album | -artist> <id>");
     }
+
     private void importHelp() {
         System.out.println("import command must be in the form: import <song | album | artist>");
     }
+
     private void exitHelp() {
         System.out.println("Use exit, quit, or logout to terminate the application.");
+    }
+
+    private void logoutHelp() {
+        System.out.println("Use logout to sign out of the current user and try to re-login.");
     }
 }
