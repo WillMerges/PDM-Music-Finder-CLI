@@ -235,7 +235,10 @@ public class DBController {
         ResultSet resultSet =
             statement.executeQuery(
                 "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
-        resultSet.next();
+        if(!resultSet.next()) {
+          System.out.println("Unexpected error, no matching cid to username: "+user);
+          return;
+        }
         int cid = resultSet.getInt("cid");
         resultSet.close();
         PreparedStatement insertStatement =
@@ -429,18 +432,17 @@ public class DBController {
   }
 
   // display a "last played" time
-  public boolean dispSongInfo(int sid) {
-    if (connection == null) {
-      return false;
-    }
-
+  public void dispSongInfo(int sid) {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted sid
       ResultSet resultSet =
           statement.executeQuery("SELECT \"title\" FROM \"Song\" WHERE sid = " + sid);
-      resultSet.next();
+      if(!resultSet.next()) {
+        System.out.println("No song exists with id: "+sid);
+        return;
+      }
       System.out.println("Title: " + resultSet.getString("title"));
       resultSet = statement.executeQuery("SELECT \"track_num\" FROM \"Song\" WHERE sid = " + sid);
       resultSet.next();
@@ -469,19 +471,18 @@ public class DBController {
     } catch (SQLException throwable) {
       throwable.printStackTrace();
     }
-    return true;
   }
 
-  public boolean dispArtistInfo(int arid) {
-    if (connection == null) {
-      return false;
-    }
+  public void dispArtistInfo(int arid) {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
       ResultSet resultSet =
           statement.executeQuery("SELECT name FROM \"Artist\" WHERE arid = " + arid);
-      resultSet.next();
+      if(!resultSet.next()) {
+        System.out.println("No artist with id: "+arid);
+        return;
+      }
       System.out.println("Artist's name is: " + resultSet.getString("name"));
       System.out.println("They published the following albums:\n");
       resultSet =
@@ -499,21 +500,19 @@ public class DBController {
     } catch (SQLException throwable) {
       throwable.printStackTrace();
     }
-
-    return true;
   }
 
-  public boolean dispAlbumInfo(int aid) {
-    if (connection == null) {
-      return false;
-    }
+  public void dispAlbumInfo(int aid) {
     // Create and execute the SQL query
     try {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted title
       ResultSet resultSet =
           statement.executeQuery("SELECT \"title\" FROM \"Album\" WHERE aid = " + aid);
-      resultSet.next();
+      if(!resultSet.next()) {
+        System.out.println("No album with id: "+aid);
+        return;
+      }
       System.out.println("Title: " + resultSet.getString("title"));
       resultSet =
           statement.executeQuery("SELECT \"releasedate\" FROM \"Album\" WHERE aid = " + aid);
@@ -530,7 +529,6 @@ public class DBController {
     } catch (SQLException throwable) {
       throwable.printStackTrace();
     }
-    return true;
   }
 
   // search for anything matching string tok
