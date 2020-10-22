@@ -235,7 +235,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         ResultSet resultSet =
             statement.executeQuery(
-                "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+                "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
         resultSet.next();
         int cid = resultSet.getInt("cid");
         resultSet.close();
@@ -259,7 +259,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         ResultSet resultSet =
             statement.executeQuery(
-                "SELECT cid FROM \"Collection\" WHERE \"Username\" = \'" + user + "\'");
+                "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
         resultSet.next();
         int cid = resultSet.getInt("cid");
         resultSet.close();
@@ -300,9 +300,63 @@ public class DBController {
     }
   }
 
+  // list the collection of a user--------------------------------------------------------------------------------------------
   public void listCollection(String user) {
-    // TODO
-    if (connection == null) {}
+    String songSql = "SELECT S.sid, S.title FROM \"Song\" S, \"Collection\" C, \"ConsistsOfSong\" CS" +
+            " WHERE S.sid = CS.sid AND CS.cid = C.cid AND C.username = ?";
+    String albumSql = "Select A.aid, A.title FROM \"Album\" A, \"Collection\" C, \"ConsistsOfAlbum\" CA" +
+            " WHERE A.aid = CA.aid AND CA.cid = C.cid AND C.username = ?";
+    String artistSql= "Select A.arid, A.name FROM \"Artist\" A, \"Collection\" C, \"ConsistsOfArtist\" CA" +
+            " WHERE A.arid = CA.arid AND CA.cid = C.cid AND C.username = ?";
+
+    try {
+      PreparedStatement songStatement = connection.prepareStatement(songSql);
+      PreparedStatement albumStatement = connection.prepareStatement(albumSql);
+      PreparedStatement artistStatement = connection.prepareStatement(artistSql);
+
+      songStatement.setString(1, user);
+      albumStatement.setString(1, user);
+      artistStatement.setString(1, user);
+
+      ResultSet songResults = songStatement.executeQuery();
+      ResultSet albumResults = albumStatement.executeQuery();
+      ResultSet artistResults = artistStatement.executeQuery();
+
+      System.out.println("Your collection includes the following:");
+      System.out.println("=================================================================");
+      System.out.println("Songs:");
+      while (songResults.next()) {
+        int sid = songResults.getInt("sid");
+        String title = songResults.getString("title");
+
+        System.out.println("\tSong ID: " + sid + "    Song Title: " + title);
+      }
+
+      System.out.println("=================================================================");
+      System.out.println("Albums:");
+      while (albumResults.next()) {
+        int aid = albumResults.getInt("aid");
+        String title = albumResults.getString("title");
+
+        System.out.println("\tAlbum ID: " + aid + "    Album Title: " + title);
+      }
+
+      System.out.println("=================================================================");
+      System.out.println("Artists:");
+      while (artistResults.next()) {
+        int arid = artistResults.getInt("arid");
+        String name = artistResults.getString("name");
+
+        System.out.println("\tArtist ID: " + arid + "    Artist Name: " + name);
+      }
+
+      songStatement.close();
+      albumStatement.close();
+      artistStatement.close();
+    }
+    catch (SQLException throwable) {
+      throwable.printStackTrace();
+    }
   }
 
   public void listArtist(int arid) {
