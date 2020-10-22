@@ -690,6 +690,8 @@ public class DBController {
         Scanner scan = new Scanner(System.in);
         Statement statement = connection.createStatement();
         ResultSet resultSet;
+        System.out.println("Enter Song Title: ");
+        String Title = scan.nextLine();
         System.out.println("Enter Song id");
         int sid = scan.nextInt();
         resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
@@ -698,8 +700,7 @@ public class DBController {
           sid = scan.nextInt();
           resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
         }
-        System.out.println("Enter Song Title");
-        String Title = scan.nextLine();
+
         System.out.println("Enter Existing Album id");
         int aid = scan.nextInt();
         resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE aid = " + aid);
