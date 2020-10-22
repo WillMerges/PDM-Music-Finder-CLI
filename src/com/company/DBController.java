@@ -11,7 +11,7 @@ public class DBController {
     try {
       connection =
           DriverManager.getConnection(
-              "jdbc:postgresql://reddwarf.cs.rit.edu/p320_18?currentSchema=myschema",
+              "jdbc:postgresql://reddwarf.cs.rit.edu/p320_18?currentSchema=public",
               "p320_18",
               "ieshoocaiDeipi0iev1v");
 
