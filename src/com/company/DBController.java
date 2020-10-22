@@ -328,7 +328,7 @@ public class DBController {
         int sid = songResults.getInt("sid");
         String title = songResults.getString("title");
 
-        System.out.println("\tSong ID: " + sid + "    Song Title: " + title);
+        System.out.println(title+"  --  id: "+sid);
       }
 
       System.out.println("=================================================================");
@@ -337,7 +337,7 @@ public class DBController {
         int aid = albumResults.getInt("aid");
         String title = albumResults.getString("title");
 
-        System.out.println("\tAlbum ID: " + aid + "    Album Title: " + title);
+        System.out.println(title+"  --  id: "+aid);
       }
 
       System.out.println("=================================================================");
@@ -346,9 +346,10 @@ public class DBController {
         int arid = artistResults.getInt("arid");
         String name = artistResults.getString("name");
 
-        System.out.println("\tArtist ID: " + arid + "    Artist Name: " + name);
+        System.out.println(name+"  --  id: "+arid);
       }
-
+      System.out.println("=================================================================");
+      
       songStatement.close();
       albumStatement.close();
       artistStatement.close();
