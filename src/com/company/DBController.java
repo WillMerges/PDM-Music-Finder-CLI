@@ -483,7 +483,12 @@ public class DBController {
       System.out.println();
 
       // Album Search
-      resultSet = statement.executeQuery("SELECT aid, title FROM \"Album\" WHERE \"title\" LIKE \'%" + tok +"%\'");
+      resultSet = statement.executeQuery("SELECT a.aid, a.title " +
+              "FROM \"Album\" a, \"Collection\" c, \"ConsistsOfAlbum\" ca " +
+              "WHERE c.cid = ca.cid AND ca.aid = a.aid " +
+              "AND \"title\" LIKE \'%" + tok +"%\' " +
+              "AND c.\"username\" = \'"+user+"\'");
+
       System.out.println("Album Results:");
       System.out.println("=================================================================");
       while (resultSet.next()){
@@ -493,7 +498,12 @@ public class DBController {
       System.out.println();
 
       // Song Search
-      resultSet = statement.executeQuery("SELECT sid, title FROM \"Song\" WHERE \"title\" LIKE \'%" + tok +"%\'");
+      resultSet = statement.executeQuery("SELECT s.sid, s.title " +
+              "FROM \"Song\" s, \"Collection\" c, \"ConsistsOfSong\" cs " +
+              "WHERE c.cid = cs.cid AND cs.sid = s.sid " +
+              "AND \"title\" LIKE \'%" + tok +"%\' " +
+              "AND c.\"username\" = \'"+user+"\'");
+
       System.out.println("Song Results:");
       System.out.println("=================================================================");
       while (resultSet.next()){
