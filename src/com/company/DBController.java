@@ -1,10 +1,11 @@
 package com.company;
 
+import java.io.Closeable;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.Scanner;
 
-public class DBController {
+public class DBController implements AutoCloseable {
   private Connection connection = null;
 
   public DBController() {
@@ -19,6 +20,16 @@ public class DBController {
       System.out.println(
           "Unable to connect to DB, please check you are on the correct network then try again.");
       System.exit(0);
+    }
+  }
+
+  public void close() {
+    if(connection != null) {
+      try {
+        connection.close();
+      } catch(Exception e) {
+        System.out.println("Unable to close DBConnection, terminating anyways.");
+      }
     }
   }
 
