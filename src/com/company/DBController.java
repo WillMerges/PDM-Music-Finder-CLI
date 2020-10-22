@@ -48,7 +48,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         // Selecting from song based on the inputted title
         ResultSet resultSet =
-            statement.executeQuery("SELECT sid FROM Song WHERE Title = " + song);
+            statement.executeQuery("SELECT \"sid\" FROM \"Song\" WHERE \"title\" = " + song);
 
         int numResults = 0;
         while (resultSet.next()) {
@@ -62,7 +62,7 @@ public class DBController {
           // TODO check this properly inserts
           int sid = resultSet.getInt("sid");
           PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO PlayRecords VALUES ?, ?, ?");
+              connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
           insertStatement.setObject(1, username);
           insertStatement.setObject(2, sid);
           insertStatement.setObject(3, LocalDate.now());
@@ -78,7 +78,7 @@ public class DBController {
             Statement artistStatement = connection.createStatement();
             ResultSet artist =
                 artistStatement.executeQuery(
-                    "SELECT name FROM Artist WHERE aid = " + resultSet.getInt("aid"));
+                    "SELECT \"name\" FROM \"Artist\" WHERE \"aid\" = " + resultSet.getInt("aid"));
 
             // Output the song information for the user
             System.out.println(
@@ -106,7 +106,7 @@ public class DBController {
                 songPlayed = true;
                 // TODO check that this correctly inserts a PlayRecord entry
                 PreparedStatement insertStatement =
-                    connection.prepareStatement("INSERT INTO PlayRecords VALUES ?, ?, ?");
+                    connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
                 insertStatement.setObject(1, username);
                 insertStatement.setObject(2, sid);
                 insertStatement.setObject(3, LocalDate.now());
@@ -116,7 +116,7 @@ public class DBController {
               }
             }
             // No matching sid was found
-            System.out.println("Please enter an sid from the list ");
+            System.out.println("Please enter an sid from the list");
           }
         }
 
@@ -136,7 +136,7 @@ public class DBController {
         Statement statement = connection.createStatement();
         // Selecting from song based on the inputted sid
         ResultSet resultSet =
-            statement.executeQuery("SELECT sid FROM Song WHERE sid = " + sid);
+            statement.executeQuery("SELECT \"sid\" FROM \"Song\" WHERE \"sid\" = " + sid);
 
         int numResults = 0;
         while (resultSet.next()) {
@@ -149,7 +149,7 @@ public class DBController {
           System.out.println("Played the song of sid: " + sid);
           // TODO check this properly inserts
           PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO PlayRecords VALUES ?, ?, ?");
+              connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
           insertStatement.setObject(1, username);
           insertStatement.setObject(2, sid);
           insertStatement.setObject(3, LocalDate.now());
