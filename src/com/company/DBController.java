@@ -54,7 +54,10 @@ public class DBController {
           found = true;
         }
       }
-    } catch (SQLException throwable) {
+
+      statement.close();
+    }
+    catch (SQLException throwable) {
       System.out.println("userExists() has encountered an error!");
       throwable.printStackTrace();
     }
@@ -299,26 +302,6 @@ public class DBController {
     } catch (SQLException throwable) {
       throwable.printStackTrace();
     }
-    return true;
-  }
-
-  // TODO we DONT need the remove methods?
-
-  // remove song from collection
-  public boolean removeSong(String user, int sid) {
-    System.out.println("This function is not yet implemented!");
-    return true;
-  }
-
-  // remove album from collection
-  public boolean removeAlbum(String user, int aid) {
-    System.out.println("This function is not yet implemented!");
-    return true;
-  }
-
-  // remove artist from eollection
-  public boolean removeArtist(String user, int arid) {
-    System.out.println("This function is not yet implemented!");
     return true;
   }
 
