@@ -352,12 +352,29 @@ public class DBController {
     }
   }
 
-  public boolean listAlbum(int aid) {
-    // TODO
-    if (connection == null) {
-      return false;
+  public void listAlbum(int aid) {
+    try {
+      Statement statement = connection.createStatement();
+      ResultSet result = statement.executeQuery("SELECT title FROM \"Album\" WHERE aid = "+Integer.toString(aid));
+      if(!result.next()) {
+        System.out.println("No album with id: "+Integer.toString(aid));
+        return;
+      }
+
+      System.out.println(result.getString("title"));
+      System.out.println("=================================================================");
+
+      result = statement.executeQuery("SELECT s.sid, s.title, s.track_num FROM \"Song\" s, \"Album\" a " +
+              "WHERE a.aid = s.sid AND a.aid = "+Integer.toString(aid)+
+              " ORDER BY s.track_num ASC");
+      while(result.next()) {
+        System.out.println(result.getInt("track_num")+": "+result.getString("title")+"  --  id: "+result.getInt("sid"));
+      }
+
+    } catch (SQLException e) {
+      e.printStackTrace();
     }
-    return true;
+
   }
 
   // display info about a song,album,or artist with name 'name'

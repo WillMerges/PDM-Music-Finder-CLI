@@ -23,16 +23,26 @@ public class CommandLine {
     }
 
     public void run() {
+        user = "";
         System.out.println("Welcome! Please enter your username to log in.");
-        System.out.print("Username: ");
         try {
-            user = scanner.nextLine();
+            while(user.equals("")) {
+                System.out.print("Username: ");
+                user = scanner.nextLine().trim();
+                if(user.contains(" ")) {
+                    System.out.println("Usernames cannot contain spaces!");
+                    user = "";
+                }
+                if(user.equals("")) {
+                    System.out.println("Please try again.");
+                }
+            }
         } catch(NoSuchElementException e) {
             System.exit(1);
         }
 
         System.out.println("Welcome, " + user + "!");
-        if (!db.userExists(user)) {
+        if (false || !db.userExists(user)) {
             System.out.println("It seems like this is your first time here, so let's get you set up!");
             db.createUser(user);
             System.out.println("Setup complete!");
@@ -52,7 +62,7 @@ public class CommandLine {
             StringTokenizer multiTokenizer = new StringTokenizer(input, " ");
             while (multiTokenizer.hasMoreTokens())
             {
-                tokens.add(multiTokenizer.nextToken());
+                tokens.add(multiTokenizer.nextToken().trim());
             }
             parseTokens();
         }
