@@ -11,18 +11,20 @@ public class DBController {
   private Connection connection = null;
 
   public DBController() {
+    boolean exit = false;
+    while(!exit) {
     try {
       connection =
           DriverManager.getConnection(
               "jdbc:postgresql://reddwarf.cs.rit.edu/p320_18?currentSchema=public",
               "p320_18",
               "ieshoocaiDeipi0iev1v");
-
+      exit = true;
     } catch (SQLException throwable) {
       System.out.println(
           "Unable to connect to DB, please check you are on the correct network then try again.");
-      System.exit(0);
-    }
+      //System.exit(0);
+    }}
   }
 
   // for DEBUG only
@@ -245,7 +247,14 @@ public class DBController {
           return;
         }
         int cid = resultSet.getInt("cid");
+
+        resultSet = statement.executeQuery("SELECT sid FROM \"ConsistsOfSong\" WHERE cid = "+cid);
+        if(resultSet.next()) {
+          System.out.println("This song is already in your collection!");
+          return;
+        }
         resultSet.close();
+
         PreparedStatement insertStatement =
             connection.prepareStatement("INSERT INTO \"ConsistsOfSong\"(sid, cid) VALUES(?, ?)");
         insertStatement.setObject(1, sid);
@@ -269,7 +278,14 @@ public class DBController {
                 "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
         resultSet.next();
         int cid = resultSet.getInt("cid");
+
+        resultSet = statement.executeQuery("SELECT aid FROM \"ConsistsOfAlbum\" WHERE cid = "+cid);
+        if(resultSet.next()) {
+          System.out.println("This album is already in your collection!");
+          return;
+        }
         resultSet.close();
+
         PreparedStatement insertStatement =
             connection.prepareStatement("INSERT INTO \"ConsistsOfAlbum\"(aid, cid) VALUES(?, ?)");
         insertStatement.setObject(1, aid);
@@ -293,7 +309,14 @@ public class DBController {
                 "SELECT cid FROM \"Collection\" WHERE \"username\" = \'" + user + "\'");
         resultSet.next();
         int cid = resultSet.getInt("cid");
+
+        resultSet = statement.executeQuery("SELECT arid FROM \"ConsistsOfArtist\" WHERE cid = "+cid);
+        if(resultSet.next()) {
+          System.out.println("This artist is already in your collection!");
+          return;
+        }
         resultSet.close();
+
         PreparedStatement insertStatement =
             connection.prepareStatement("INSERT INTO \"ConsistsOfArtist\"(ArID, cid) VALUES(?, ?)");
         insertStatement.setObject(1, arid);
