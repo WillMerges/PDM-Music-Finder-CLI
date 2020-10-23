@@ -807,14 +807,13 @@ public class DBController {
               aid++;
               System.out.println("Enter Album Title: ");
               String Title = scan.nextLine();
-              String releaseDate = "";
-              System.out.println("What year was this album released");
+              System.out.println("What date was this album released (Format : YYYYMMDD)");
+              /*
               int year = scan.nextInt();
               while (year < 1000 || year > 9999){
                   System.out.println("please enter a 4 digit year");
                   year = scan.nextInt();
               }
-              releaseDate += year;
               System.out.println("What month was this album released");
               int month = 0;
               month = scan.nextInt();
@@ -822,24 +821,14 @@ public class DBController {
                   System.out.println("Please enter a valid month");
                   month = scan.nextInt();
               }
-              if (month > 9) {
-                  releaseDate += "-" + month;
-              }
-              else{
-                  releaseDate += "-0" + month;
-              }
               System.out.println("What day of the month was this album released");
               int day = scan.nextInt();
               while (day < 1 || day > 31){
                   System.out.println("Please enter a valid day");
                   day = scan.nextInt();
-              }
-              if (day > 9) {
-                  releaseDate += "-" + day;
-              }
-              else{
-                  releaseDate += "-0" + day;
-              }
+              }*/
+              long date = scan.nextLong();
+              Date releaseDate = new Date(date);
               System.out.println("Enter Existing Artist id");
               int arid = scan.nextInt();
               resultSet = statement.executeQuery("SELECT arid FROM \"Artist\" WHERE arid = " + arid);
@@ -848,9 +837,6 @@ public class DBController {
               } else {
                   System.out.println("Please enter a genre for the album");
                   String genre = scan.next();
-                  if (scan.hasNext()){
-                      genre += " " + scan.next();
-                  }
                   PreparedStatement insertStatement =
                           connection.prepareStatement("INSERT INTO \"Album\"(aid, title, releasedate, genre) VALUES(?, ?, ?, ?)");
                   insertStatement.setObject(1, aid);
