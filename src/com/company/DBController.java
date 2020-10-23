@@ -248,7 +248,7 @@ public class DBController {
         }
         int cid = resultSet.getInt("cid");
 
-        resultSet = statement.executeQuery("SELECT sid FROM \"ConsistsOfSong\" WHERE cid = "+cid);
+        resultSet = statement.executeQuery("SELECT sid FROM \"ConsistsOfSong\" WHERE cid = "+cid+" AND sid = "+sid);
         if(resultSet.next()) {
           System.out.println("This song is already in your collection!");
           return;
@@ -279,7 +279,7 @@ public class DBController {
         resultSet.next();
         int cid = resultSet.getInt("cid");
 
-        resultSet = statement.executeQuery("SELECT aid FROM \"ConsistsOfAlbum\" WHERE cid = "+cid);
+        resultSet = statement.executeQuery("SELECT aid FROM \"ConsistsOfAlbum\" WHERE cid = "+cid+" AND aid = "+aid);
         if(resultSet.next()) {
           System.out.println("This album is already in your collection!");
           return;
@@ -310,7 +310,7 @@ public class DBController {
         resultSet.next();
         int cid = resultSet.getInt("cid");
 
-        resultSet = statement.executeQuery("SELECT arid FROM \"ConsistsOfArtist\" WHERE cid = "+cid);
+        resultSet = statement.executeQuery("SELECT arid FROM \"ConsistsOfArtist\" WHERE cid = "+cid+" AND arid = "+arid);
         if(resultSet.next()) {
           System.out.println("This artist is already in your collection!");
           return;
@@ -721,7 +721,7 @@ public class DBController {
     return true;
   }
 
-  public boolean importSong() {
+  public void importSong() {
     if (connection != null) {
 
       // Create and execute the SQL query
@@ -740,9 +740,10 @@ public class DBController {
         String Title = scan.nextLine();
         System.out.println("Enter Existing Album id");
         int aid = scan.nextInt();
-        resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE aid = " + aid);
+        resultSet = statement.executeQuery("SELECT aid FROM \"Album\" WHERE aid = " + aid);
         if(!resultSet.next()){
           System.out.println("Please try import again with existing aid");
+          return;
         }
         else{
           resultSet = statement.executeQuery("SELECT \"track_num\" FROM \"Song\" WHERE aid = " + aid);
@@ -772,7 +773,7 @@ public class DBController {
         System.out.println("IDs must all be numbers!");
       }
     }
-    return true;
+    return;
   }
 
   public boolean importArtist() {
