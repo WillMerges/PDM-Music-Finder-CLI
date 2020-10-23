@@ -1,7 +1,10 @@
 package com.company;
 
+import jdk.internal.util.xml.impl.Input;
+
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class DBController {
@@ -427,7 +430,8 @@ public class DBController {
                         + "  --  id: "
                         + result.getInt("sid"));
       }
-
+      System.out.println("=================================================================");
+      System.out.println();
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -695,7 +699,6 @@ public class DBController {
   }
 
   public boolean importSong() {
-    // TODO
     if (connection != null) {
 
       // Create and execute the SQL query
@@ -738,16 +741,18 @@ public class DBController {
           insertStatement.close();
 
         }
+        System.out.println("Imported new song with id: "+sid);
         resultSet.close();
       } catch (SQLException throwable) {
         throwable.printStackTrace();
+      } catch(InputMismatchException i) {
+        System.out.println("IDs must all be numbers!");
       }
     }
     return true;
   }
 
   public boolean importArtist() {
-    // TODO
     if (connection != null) {
 
       // Create and execute the SQL query
@@ -775,16 +780,18 @@ public class DBController {
         insertStatement.setObject(2, Title);
         insertStatement.execute();
         insertStatement.close();
+        System.out.println("Imported new artist with id: "+arid);
         resultSet.close();
       } catch (SQLException throwable) {
         throwable.printStackTrace();
+      } catch(InputMismatchException i) {
+        System.out.println("IDs must all be numbers!");
       }
     }
     return true;
   }
 
-  public boolean importAlbum() {
-    // TODO
+  public void importAlbum() {
       if (connection != null) {
 
           // Create and execute the SQL query
@@ -809,7 +816,8 @@ public class DBController {
               }
               releaseDate += year;
               System.out.println("What month was this album released");
-              int month = scan.nextInt();
+              int month = 0;
+              month = scan.nextInt();
               while (month < 1 || month > 12){
                   System.out.println("Please enter a valid month");
                   month = scan.nextInt();
@@ -856,13 +864,14 @@ public class DBController {
                   insertStatement.setObject(2, aid);
                   insertStatement.execute();
                   insertStatement.close();
-
               }
+              System.out.println("Imported new album with id: "+aid);
               resultSet.close();
           } catch (SQLException throwable) {
               throwable.printStackTrace();
+          } catch (InputMismatchException i) {
+            System.out.println("Dates and IDs must all be numbers!");
           }
       }
-    return true;
   }
 }
