@@ -150,13 +150,13 @@ public class CommandLine {
             }
 
             switch (modifier) {
-                case "-song":
+                case "song":
                     db.addSong(user, id);
                     break;
-                case "-album":
+                case "album":
                     db.addAlbum(user, id);
                     break;
-                case "-artist":
+                case "artist":
                     db.addArtist(user, id);
                     break;
                 default:
@@ -174,6 +174,7 @@ public class CommandLine {
             String flag = tokens.get(1);
             if(!flag.equals("-id")) {
                 playHelp();
+                return;
             }
             String id_str = tokens.get(2);
             int id = -1;
@@ -231,7 +232,6 @@ public class CommandLine {
     }
 
     private void infoOptions() {
-        // NOTE: song, album, artist names can't start with '-' (currently)
         if(tokens.size() >= 3) {
             String id_str = tokens.get(2);
             int id = -1;
@@ -344,7 +344,7 @@ public class CommandLine {
     }
 
     private void addHelp() {
-        System.out.println("The add command must be in the form: add <-song | -album | -artist> <id>");
+        System.out.println("The add command must be in the form: add <song | album | artist> <id>");
     }
 
     private void importHelp() {
@@ -352,7 +352,7 @@ public class CommandLine {
     }
 
     private void exitHelp() {
-        System.out.println("Use exit, quit, or logout to terminate the application.");
+        System.out.println("Use exit or quit to terminate the application.");
     }
 
     private void logoutHelp() {
