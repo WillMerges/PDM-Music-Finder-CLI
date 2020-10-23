@@ -101,92 +101,94 @@ public class DBController {
   }
 
   public void playSong(String song, String username) {
-    if (connection != null) {
-      // Create and execute the SQL query
-      try {
-        Statement statement = connection.createStatement();
-        // Selecting from song based on the inputted title
-        ResultSet resultSet =
-            statement.executeQuery("SELECT \"sid\" FROM \"Song\" WHERE \"title\" = " + song);
-
-        int numResults = 0;
-        while (resultSet.next()) {
-          numResults++;
-        }
-
-        if (numResults == 0) {
-          System.out.println("Unable to play " + song);
-        } else if (numResults == 1) {
-          System.out.println("Played " + song);
-          // Insert the play record entry
-          int sid = resultSet.getInt("sid");
-          PreparedStatement insertStatement =
-              connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
-          insertStatement.setObject(1, username);
-          insertStatement.setObject(2, sid);
-          insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
-          insertStatement.execute();
-          insertStatement.close();
-        } else {
-          System.out.println(
-              "Multiple songs with that name found. Please select the SID of the desired song to be played");
-
-          resultSet.first();
-          // Go over the multiple matches and output them in the format: "sid Title by artist name
-          while (resultSet.next()) {
-            // Fetch the artist name from the aid associated with the song
-            Statement artistStatement = connection.createStatement();
-            ResultSet artist =
-                artistStatement.executeQuery(
-                    "SELECT \"name\" FROM \"Artist\" WHERE \"aid\" = " + resultSet.getInt("aid"));
-
-            // Output the song information for the user
-            System.out.println(
-                resultSet.getInt("sid: ")
-                    + resultSet.getString("title")
-                    + " by "
-                    + artist.getString("name"));
-
-            artistStatement.close();
-          }
-
-          Scanner scanner = new Scanner(System.in);
-          // Get sid from user
-          int sid = scanner.nextInt();
-          scanner.close();
-
-          // Check for a matching sid within the set of songs and if the inputted sid is not within
-          // the output ask for another
-          boolean songPlayed = false;
-          while (!songPlayed) {
-            // Checked the original list of songs for the inputted sid
-            while (resultSet.next()) {
-              if (resultSet.getInt("sid") == sid) {
-                System.out.println("Played song: " + resultSet.getString("title"));
-                songPlayed = true;
-                // Insert the play record entry
-                PreparedStatement insertStatement =
-                    connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
-                insertStatement.setObject(1, username);
-                insertStatement.setObject(2, sid);
-                insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
-                insertStatement.execute();
-                insertStatement.close();
-                break;
-              }
-            }
-            // No matching sid was found
-            System.out.println("Please enter an sid from the list");
-          }
-        }
-
-        statement.close();
-        resultSet.close();
-
-      } catch (SQLException throwable) {
-        throwable.printStackTrace();
-      }
-    }
+    System.out.println("Not implemented at this time, please use the sid version.");
+    return;
+//    if (connection != null) {
+//      // Create and execute the SQL query
+//      try {
+//        Statement statement = connection.createStatement();
+//        // Selecting from song based on the inputted title
+//        ResultSet resultSet =
+//            statement.executeQuery("SELECT \"sid\" FROM \"Song\" WHERE \"title\" = " + song);
+//
+//        int numResults = 0;
+//        while (resultSet.next()) {
+//          numResults++;
+//        }
+//
+//        if (numResults == 0) {
+//          System.out.println("Unable to play " + song);
+//        } else if (numResults == 1) {
+//          System.out.println("Played " + song);
+//          // Insert the play record entry
+//          int sid = resultSet.getInt("sid");
+//          PreparedStatement insertStatement =
+//              connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
+//          insertStatement.setObject(1, username);
+//          insertStatement.setObject(2, sid);
+//          insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
+//          insertStatement.execute();
+//          insertStatement.close();
+//        } else {
+//          System.out.println(
+//              "Multiple songs with that name found. Please select the SID of the desired song to be played");
+//
+//          resultSet.first();
+//          // Go over the multiple matches and output them in the format: "sid Title by artist name
+//          while (resultSet.next()) {
+//            // Fetch the artist name from the aid associated with the song
+//            Statement artistStatement = connection.createStatement();
+//            ResultSet artist =
+//                artistStatement.executeQuery(
+//                    "SELECT \"name\" FROM \"Artist\" WHERE \"aid\" = " + resultSet.getInt("aid"));
+//
+//            // Output the song information for the user
+//            System.out.println(
+//                resultSet.getInt("sid: ")
+//                    + resultSet.getString("title")
+//                    + " by "
+//                    + artist.getString("name"));
+//
+//            artistStatement.close();
+//          }
+//
+//          Scanner scanner = new Scanner(System.in);
+//          // Get sid from user
+//          int sid = scanner.nextInt();
+//          scanner.close();
+//
+//          // Check for a matching sid within the set of songs and if the inputted sid is not within
+//          // the output ask for another
+//          boolean songPlayed = false;
+//          while (!songPlayed) {
+//            // Checked the original list of songs for the inputted sid
+//            while (resultSet.next()) {
+//              if (resultSet.getInt("sid") == sid) {
+//                System.out.println("Played song: " + resultSet.getString("title"));
+//                songPlayed = true;
+//                // Insert the play record entry
+//                PreparedStatement insertStatement =
+//                    connection.prepareStatement("INSERT INTO \"PlayRecords\" VALUES ?, ?, ?");
+//                insertStatement.setObject(1, username);
+//                insertStatement.setObject(2, sid);
+//                insertStatement.setObject(3, Timestamp.valueOf(LocalDateTime.now()));
+//                insertStatement.execute();
+//                insertStatement.close();
+//                break;
+//              }
+//            }
+//            // No matching sid was found
+//            System.out.println("Please enter an sid from the list");
+//          }
+//        }
+//
+//        statement.close();
+//        resultSet.close();
+//
+//      } catch (SQLException throwable) {
+//        throwable.printStackTrace();
+//      }
+//    }
   }
 
   public void playSong(int sid, String username) {
@@ -438,29 +440,37 @@ public class DBController {
       Statement statement = connection.createStatement();
       // Selecting from song based on the inputted sid
       ResultSet resultSet =
-          statement.executeQuery("SELECT \"title\" FROM \"Song\" WHERE sid = " + sid);
+          statement.executeQuery("SELECT title, track_num, aid FROM \"Song\" WHERE sid = " + sid);
       if(!resultSet.next()) {
         System.out.println("No song exists with id: "+sid);
         return;
       }
+
       System.out.println("Title: " + resultSet.getString("title"));
-      resultSet = statement.executeQuery("SELECT \"track_num\" FROM \"Song\" WHERE sid = " + sid);
-      resultSet.next();
       int trackNum = resultSet.getInt("track_num");
-      resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE sid = " + sid);
-      resultSet.next();
       int aid = resultSet.getInt("aid");
+
       resultSet = statement.executeQuery("SELECT arid FROM \"PublishesAlbum\" WHERE aid = " + aid);
-      resultSet.next();
+      if(!resultSet.next()) {
+        System.out.println("Unexpected error, no such aid PublishesAlbum: "+aid);
+        return;
+      }
+
       int arid = resultSet.getInt("arid");
       resultSet = statement.executeQuery("SELECT \"name\" FROM \"Artist\" WHERE arid = " + arid);
+      if(!resultSet.next()) {
+        System.out.println("Unexpected error, no such arid in Artist: "+arid);
+        return;
+      }
+      System.out.println("Artist: " + resultSet.getString("name")+"  --  id: "+arid);
+
+      resultSet = statement.executeQuery("SELECT title FROM \"Album\" WHERE aid = " + aid);
       resultSet.next();
-      System.out.println("Artist: " + resultSet.getString("name"));
-      resultSet = statement.executeQuery("SELECT \"title\" FROM \"Album\" WHERE aid = " + aid);
-      resultSet.next();
-      System.out.println("Album: " + resultSet.getString("title"));
+      System.out.println("Album: " + resultSet.getString("title")+"  --  id: "+aid);
       System.out.println("Track Number: " + trackNum);
       resultSet = statement.executeQuery("SELECT \"time\" FROM \"PlayRecords\" WHERE sid = " + sid+" ORDER BY time DESC");
+
+
       if (resultSet.next()) {
         System.out.println("Last played: " + resultSet.getTimestamp("time"));
       } else {
@@ -484,7 +494,8 @@ public class DBController {
         return;
       }
       System.out.println("Artist's name is: " + resultSet.getString("name"));
-      System.out.println("They published the following albums:\n");
+      System.out.println("They published the following albums:");
+      System.out.println("=================================================================");
       resultSet =
           statement.executeQuery(
               ""
@@ -493,8 +504,11 @@ public class DBController {
       while (resultSet.next()) {
         String title = resultSet.getString("title");
         int aid = resultSet.getInt("aid");
-        System.out.println(title + "  ---  id: " + Integer.toString(aid));
+        System.out.println(title + "  --  id: " + Integer.toString(aid));
       }
+      System.out.println("=================================================================");
+      System.out.println();
+
       resultSet.close();
 
     } catch (SQLException throwable) {
@@ -523,7 +537,7 @@ public class DBController {
       int arid = resultSet.getInt("arid");
       resultSet = statement.executeQuery("SELECT \"name\" FROM \"Artist\" WHERE arid = " + arid);
       resultSet.next();
-      System.out.println("Artist: " + resultSet.getString("name"));
+      System.out.println("Artist: " + resultSet.getString("name")+"  --  id: "+arid);
       resultSet.close();
 
     } catch (SQLException throwable) {
