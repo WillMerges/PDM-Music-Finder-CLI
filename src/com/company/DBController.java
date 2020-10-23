@@ -666,17 +666,15 @@ public class DBController {
         Scanner scan = new Scanner(System.in);
         Statement statement = connection.createStatement();
         ResultSet resultSet;
+          resultSet = statement.executeQuery("SELECT MAX(sid) FROM \"Song\"");
+          int sid = -1;
+          while (resultSet.next()) {
+              sid = resultSet.getInt("max");
+          }
+          sid++;
+          System.out.println(sid);
         System.out.println("Enter Song Title: ");
         String Title = scan.nextLine();
-        System.out.println("Enter Song id");
-        int sid = scan.nextInt();
-        resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
-        while (resultSet.next()){
-          System.out.println("Song with that ID already exists please enter new ID");
-          sid = scan.nextInt();
-          resultSet = statement.executeQuery("SELECT sid FROM \"Song\" WHERE sid = " + sid);
-        }
-
         System.out.println("Enter Existing Album id");
         int aid = scan.nextInt();
         resultSet = statement.executeQuery("SELECT aid FROM \"Song\" WHERE aid = " + aid);
@@ -713,11 +711,121 @@ public class DBController {
 
   public boolean importArtist() {
     // TODO
+    if (connection != null) {
+
+      // Create and execute the SQL query
+      try {
+        Scanner scan = new Scanner(System.in);
+        Statement statement = connection.createStatement();
+        ResultSet resultSet;
+        resultSet = statement.executeQuery("SELECT MAX(arid) FROM \"Artist\"");
+        int arid = -1;
+        while (resultSet.next()) {
+            arid = resultSet.getInt("max");
+        }
+        arid++;
+        System.out.println("Enter Artist Name: ");
+        String Title = scan.nextLine();
+        resultSet = statement.executeQuery("SELECT arid FROM \"Artist\" WHERE arid = " + arid);
+        while (resultSet.next()){
+          System.out.println("Artist with that ID already exists please enter new ID");
+          arid = scan.nextInt();
+          resultSet = statement.executeQuery("SELECT arid FROM \"Artist\" WHERE arid = " + arid);
+        }
+        PreparedStatement insertStatement =
+                  connection.prepareStatement("INSERT INTO \"Artist\"(arid, name) VALUES(?, ?)");
+        insertStatement.setObject(1, arid);
+        insertStatement.setObject(2, Title);
+        insertStatement.execute();
+        insertStatement.close();
+        resultSet.close();
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
+    }
     return true;
   }
 
   public boolean importAlbum() {
     // TODO
+      if (connection != null) {
+
+          // Create and execute the SQL query
+          try {
+              Scanner scan = new Scanner(System.in);
+              Statement statement = connection.createStatement();
+              ResultSet resultSet;
+              resultSet = statement.executeQuery("SELECT MAX(aid) FROM \"Album\"");
+              int aid = -1;
+              while (resultSet.next()) {
+                  aid = resultSet.getInt("max");
+              }
+              aid++;
+              System.out.println("Enter Album Title: ");
+              String Title = scan.nextLine();
+              String releaseDate = "";
+              System.out.println("What year was this album released");
+              int year = scan.nextInt();
+              while (year < 1000 || year > 9999){
+                  System.out.println("please enter a 4 digit year");
+                  year = scan.nextInt();
+              }
+              releaseDate += year;
+              System.out.println("What month was this album released");
+              int month = scan.nextInt();
+              while (month < 1 || month > 12){
+                  System.out.println("Please enter a valid month");
+                  month = scan.nextInt();
+              }
+              if (month > 9) {
+                  releaseDate += "-" + month;
+              }
+              else{
+                  releaseDate += "-0" + month;
+              }
+              System.out.println("What day of the month was this album released");
+              int day = scan.nextInt();
+              while (day < 1 || day > 31){
+                  System.out.println("Please enter a valid day");
+                  day = scan.nextInt();
+              }
+              if (day > 9) {
+                  releaseDate += "-" + day;
+              }
+              else{
+                  releaseDate += "-0" + day;
+              }
+              System.out.println("Enter Existing Artist id");
+              int arid = scan.nextInt();
+              resultSet = statement.executeQuery("SELECT arid FROM \"Artist\" WHERE arid = " + arid);
+              if (!resultSet.next()) {
+                  System.out.println("Please try import again with existing arid");
+              } else {
+                  System.out.println("Please enter a genre for the album");
+                  String genre = scan.next();
+                  if (scan.hasNext()){
+                      genre += " " + scan.next();
+                  }
+                  PreparedStatement insertStatement =
+                          connection.prepareStatement("INSERT INTO \"Album\"(aid, title, releasedate, genre) VALUES(?, ?, ?, ?)");
+                  insertStatement.setObject(1, aid);
+                  insertStatement.setObject(2, Title);
+                  insertStatement.setObject(3, releaseDate);
+                  insertStatement.setObject(4, genre);
+                  insertStatement.execute();
+                  insertStatement =
+                          connection.prepareStatement("INSERT INTO \"PublishesAlbum\"(arid, aid) VALUES(?, ?)");
+                  insertStatement.setObject(1, arid);
+                  insertStatement.setObject(2, aid);
+                  insertStatement.execute();
+                  insertStatement.close();
+
+              }
+              resultSet.close();
+          } catch (SQLException throwable) {
+              throwable.printStackTrace();
+          }
+      }
     return true;
   }
 }
