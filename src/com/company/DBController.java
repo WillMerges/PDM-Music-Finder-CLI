@@ -11,20 +11,18 @@ public class DBController {
   private Connection connection = null;
 
   public DBController() {
-    boolean exit = false;
-    while(!exit) {
     try {
       connection =
           DriverManager.getConnection(
               "jdbc:postgresql://reddwarf.cs.rit.edu/p320_18?currentSchema=public",
               "p320_18",
               "ieshoocaiDeipi0iev1v");
-      exit = true;
+
     } catch (SQLException throwable) {
       System.out.println(
           "Unable to connect to DB, please check you are on the correct network then try again.");
-      //System.exit(0);
-    }}
+      System.exit(0);
+    }
   }
 
   // for DEBUG only
