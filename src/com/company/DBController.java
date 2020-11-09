@@ -2,6 +2,10 @@ package com.company;
 
 import jdk.internal.util.xml.impl.Input;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.InputMismatchException;
@@ -36,6 +40,42 @@ public class DBController {
         System.out.print(columnValue + " " + rsmd.getColumnName(i));
       }
       System.out.println("");
+    }
+  }
+
+  public void getArtistGenreScores(String outfile) {
+    FileWriter file = null;
+    try {
+      Files.deleteIfExists(Paths.get(outfile));
+      file = new FileWriter(outfile);
+
+      Statement statement = connection.createStatement();
+      ResultSet resultSet =
+              statement.executeQuery("select distinct arid from \"Artist\"");
+      int arid = -1;
+      while(resultSet.next()) {
+        file.write(arid+"\n");
+        arid = resultSet.getInt("arid");
+
+        ResultSet genres =
+                statement.executeQuery("select a.genre, a.releasedate from \"Album\" a, \"PublishesAlbum\" p " +
+                                          "where p.arid = "+ arid + " and p.aid = a.aid");
+
+        String genre = "";
+        Timestamp t = null;
+        while(genres.next()) {
+          t = genres.getTimestamp("releasedate");
+          genre = genres.getString("genre");
+          file.write(genre + "," + t.getTime() + "\n");
+        }
+      }
+    } catch(Exception e) {
+      e.printStackTrace();
+      System.out.println("Error fetching artist genre scores.");
+    } finally {
+      try {
+        file.close();
+      } catch (Exception e) {}
     }
   }
 

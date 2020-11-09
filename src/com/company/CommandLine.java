@@ -22,7 +22,12 @@ public class CommandLine {
         input = "";
     }
 
+    public void test() {
+        db.getArtistGenreScores("test.csv");
+    }
+
     public void run() {
+        test();
         user = "";
         System.out.println("Welcome! Please enter your username to log in.");
         try {
