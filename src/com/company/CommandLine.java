@@ -22,12 +22,13 @@ public class CommandLine {
         input = "";
     }
 
+    // DEBUG only
     public void test() {
         db.getArtistGenreScores("test.csv");
     }
 
     public void run() {
-        test();
+        //test();
         user = "";
         System.out.println("Welcome! Please enter your username to log in.");
         try {
@@ -113,8 +114,27 @@ public class CommandLine {
             case "logout":
                 exit = true;
                 break;
+            case "analytic":
+                analyticsOptions();
+                break;
             default:
                 System.out.println(first + " is not a recognized command.");
+        }
+    }
+
+    private void analyticsOptions() {
+        if(tokens.size() >= 2) {
+            String analytic = tokens.get(1);
+
+            switch (analytic) {
+                case "similar_artist":
+                    db.getArtistGenreScores("artist_genre_scores.csv");
+                    break;
+                default:
+                    System.out.println(analytic+" is not a valid analytic.");
+            }
+        } else {
+            System.out.println("Analytics must be run as \"analytic <analytic name> [other options]\"");
         }
     }
 

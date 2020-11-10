@@ -54,8 +54,8 @@ public class DBController {
               statement.executeQuery("select distinct arid from \"Artist\"");
       int arid = -1;
       while(resultSet.next()) {
-        file.write(arid+"\n");
         arid = resultSet.getInt("arid");
+        file.write(arid+"\n");
 
         ResultSet genres =
                 statement.executeQuery("select a.genre, a.releasedate from \"Album\" a, \"PublishesAlbum\" p " +
@@ -69,6 +69,7 @@ public class DBController {
           file.write(genre + "," + t.getTime() + "\n");
         }
       }
+      System.out.println("Wrote data to: "+outfile);
     } catch(Exception e) {
       e.printStackTrace();
       System.out.println("Error fetching artist genre scores.");
