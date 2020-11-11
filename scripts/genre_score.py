@@ -20,8 +20,8 @@ if len(sys.argv) != 2:
 
 filename = sys.argv[1]
 
-# values are a list of dictionaries
-#[dictionary w/ key = timestamp val = genre, [sum of weights, dictionary w/ key = genre val = weight]]
+# values are a list two dictionaries dictionaries followed by name
+#[dictionary w/ key = timestamp val = genre, [sum of weights, dictionary w/ key = genre val = weight], artist name]
 artists = dict()
 
 file = open(filename)
@@ -37,8 +37,12 @@ while reading:
 
     # new artist
     if line.find(",") == -1:
-        arid = int(line)
-        artists[arid] = [dict(),[0.0,dict()]]
+        line = line.replace("\006", ",") # change the /006 character to a comma since it had to be changed for CSV format
+        info = line.split(":", 2) # split into two tokens
+        arid = int(info[0])
+        name = info[1][:-1]
+
+        artists[arid] = [dict(),[0.0,dict()], name]
         current_artist = arid;
     # value row
     else:
@@ -82,9 +86,23 @@ for key in artists.keys():
 
 #for testing only
 for arid in artists:
-    print(str(arid)+":")
-    for genre in artists[arid][1][1]:
-        weight = artists[arid][1][1][genre]
-        print(genre+"  ---  "+str(weight))
+   print(str(arid)+"  ---  "+artists[arid][2])
+   for genre in artists[arid][1][1]:
+       weight = artists[arid][1][1][genre]
+       print(genre+"  ---  "+str(weight))
+   print()
+
+
+if len(sys.argv) == 3:
+    arid = int(sys.argv[2])
+else:
+    arid = int(input("'arid' of artist to compare against: "))
+    print()
+
+print(str(arid)+"  ---  "+artists[arid][2])
+for genre in artists[arid][1][1]:
+    weight = artists[arid][1][1][genre]
+    print(genre+"  ---  "+str(weight))
+
 
 file.close()

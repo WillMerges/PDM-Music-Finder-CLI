@@ -51,11 +51,14 @@ public class DBController {
 
       Statement statement = connection.createStatement();
       ResultSet resultSet =
-              statement.executeQuery("select distinct arid from \"Artist\"");
+              statement.executeQuery("select distinct arid, name from \"Artist\"");
       int arid = -1;
+      String name = "";
       while(resultSet.next()) {
         arid = resultSet.getInt("arid");
-        file.write(arid+"\n");
+        name = resultSet.getString("name");
+        name = name.replaceAll(",", "\006"); // can't pass a comma in to a csv so use ACK char
+        file.write(arid+": "+name+"\n");
 
         ResultSet genres =
                 statement.executeQuery("select a.genre, a.releasedate from \"Album\" a, \"PublishesAlbum\" p " +
