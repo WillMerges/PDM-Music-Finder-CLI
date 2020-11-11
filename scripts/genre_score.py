@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import matplotlib.pyplot as plt
 
 # TODO
 # for now, use a linear weighting (maybe make logistic?)
@@ -56,6 +57,7 @@ while reading:
             artists[arid][0][timestamp] = genre
 
 # at this point the whole file is read
+file.close()
 
 # add up the weights
 for key in artists.keys():
@@ -103,6 +105,11 @@ print(str(arid)+"  ---  "+artists[arid][2])
 for genre in artists[arid][1][1]:
     weight = artists[arid][1][1][genre]
     print(genre+"  ---  "+str(weight))
+    i = i + 1
 
+genres = artists[arid][1][1].keys()
+weights = artists[arid][1][1].values()
+fig = plt.figure(figsize = (10, 5))
+plt.bar(genres, weights, width=0.95, color='orange')
 
-file.close()
+plt.show()
