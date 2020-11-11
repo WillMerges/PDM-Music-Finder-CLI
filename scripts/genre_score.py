@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import sys
 
+# TODO
 # for now, use a linear weighting (maybe make logistic?)
 def generate_time_weights(N):
     ret = []
