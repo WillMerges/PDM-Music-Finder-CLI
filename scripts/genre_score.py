@@ -3,7 +3,6 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
-# TODO
 # for now, use a linear weighting (maybe make logistic?)
 def generate_time_weights(N):
     ret = []
@@ -107,14 +106,6 @@ for genre in artists[tid][1][1]:
     weight = artists[tid][1][1][genre]
     print(genre+"  ---  "+str(weight))
     i = i + 1
-
-# TESTING show histogram
-# genres = artists[arid][1][1].keys()
-# weights = artists[arid][1][1].values()
-# fig = plt.figure(figsize = (10, 5))
-# plt.bar(genres, weights, width=0.95, color='orange')
-# plt.show()
-
 
 # key of delta, value of arid
 deltas = dict()
