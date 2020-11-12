@@ -14,12 +14,7 @@ def generate_time_weights(N):
 
     return ret
 
-
-if len(sys.argv) != 2:
-    print("run as: genre_score.py <filename>")
-    exit()
-
-filename = sys.argv[1]
+filename = "../artist_genre_scores.csv"
 
 # values are a list two dictionaries dictionaries followed by name
 #[dictionary w/ key = timestamp val = genre, [sum of weights, dictionary w/ key = genre val = weight], artist name]
@@ -95,8 +90,8 @@ for arid in artists:
    print()
 
 
-if len(sys.argv) == 3:
-    tid = int(sys.argv[2])
+if len(sys.argv) == 1:
+    tid = int(sys.argv[1])
 else:
     tid = int(input("'arid' of artist to compare against: "))
     print()
