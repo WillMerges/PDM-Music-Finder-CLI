@@ -92,7 +92,7 @@ for key in artists.keys():
         artists[key][1][1][genre] = artists[key][1][1][genre] / artists[key][1][0]
 
 # for TESTING only, print all artists
-for arid in artists:
+for arid in sorted(list(artists.keys())):
    print(str(arid)+"  ---  "+artists[arid][2])
    for genre in artists[arid][1][1]:
        weight = artists[arid][1][1][genre]
@@ -130,10 +130,10 @@ for arid in artists:
     else:
         deltas[delta].append(arid)
 
-# TESTING print deltas
-for delta in sorted(deltas.keys()):
-    for arid in deltas[delta]:
-        print(str(arid)+"  --  "+str(delta))
+# # TESTING print deltas
+# for delta in sorted(deltas.keys()):
+#     for arid in deltas[delta]:
+#         print(str(arid)+"  --  "+str(delta))
 
 # graph bar graph
 x_lab = artists[tid][1][1].keys()
