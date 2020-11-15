@@ -3,6 +3,9 @@ import sys
 import matplotlib.pyplot as plt
 import numpy as np
 
+# value multiplied by % played to get weight
+playcount_multiplier = 0
+
 # for now, use a linear weighting (maybe make logistic?)
 def generate_time_weights(N):
     ret = []
@@ -16,8 +19,8 @@ def generate_time_weights(N):
 
 filename = "../artist_genre_scores.csv"
 
-# values are a list two dictionaries dictionaries followed by name
-#[dictionary w/ key = timestamp val = genre, [sum of weights, dictionary w/ key = genre val = weight], artist name]
+# keys are arid's values are a list two dictionaries dictionaries followed by name
+#[dictionary w/ key = timestamp val = [genre, playcount], [sum of weights, dictionary w/ key = genre val = weight], artist name, total song plays]
 artists = dict()
 
 file = open(filename)
@@ -38,18 +41,20 @@ while reading:
         arid = int(info[0])
         name = info[1][:-1]
 
-        artists[arid] = [dict(),[0.0,dict()], name]
+        artists[arid] = [dict(),[0.0,dict()], name, 0]
         current_artist = arid;
     # value row
     else:
         cells = line.split(",")
         genre = cells[0]
         timestamp = int(cells[1])
-        if arid is None:
+        playcount = int(cells[2])
+        if current_artist is None:
             print("First line was not an artist, error reading file.")
             exit()
         else:
-            artists[arid][0][timestamp] = genre
+            artists[arid][0][timestamp] = [genre, playcount]
+            artists[arid][3] = artists[arid][3] + playcount
 
 # at this point the whole file is read
 file.close()
@@ -60,19 +65,24 @@ for key in artists.keys():
     if len(timestamp_list) == 0:
         continue
 
+    total_plays = float(artists[key][3])
     time_weight_list = generate_time_weights(len(timestamp_list))
 
     i = 0
     for timestamp in timestamp_list:
+        print(timestamp)
         time_weight = time_weight_list[i]
-        genre = artists[key][0][timestamp]
+        print(time_weight)
+        genre = artists[key][0][timestamp][0]
+        playcount = artists[key][0][timestamp][1]
+        play_weight = float(playcount) / total_plays * playcount_multiplier
 
         if genre in artists[key][1][1]:
-            artists[key][1][1][genre] = artists[key][1][1][genre] + time_weight
+            artists[key][1][1][genre] = artists[key][1][1][genre] + time_weight + play_weight
         else:
-            artists[key][1][1][genre] = float(time_weight)
+            artists[key][1][1][genre] = float(time_weight) + play_weight
 
-        artists[key][1][0] = artists[key][1][0] + float(time_weight) # add to the sum
+        artists[key][1][0] = artists[key][1][0] + float(time_weight) + play_weight # add to the sum
 
         i = i + 1
 
@@ -90,8 +100,8 @@ for arid in artists:
    print()
 
 
-if len(sys.argv) == 1:
-    tid = int(sys.argv[1])
+if len(sys.argv) == 3:
+    tid = int(sys.argv[2])
 else:
     tid = int(input("'arid' of artist to compare against: "))
     print()
@@ -102,7 +112,7 @@ for genre in artists[tid][1][1]:
     print(genre+"  ---  "+str(weight))
     i = i + 1
 
-# key of delta, value of arid
+# key of delta, value of list of arid's
 deltas = dict()
 
 for arid in artists:
@@ -114,11 +124,16 @@ for arid in artists:
             delta = delta + abs(artists[tid][1][1][genre] - artists[arid][1][1][genre])
         else: #penalize for not having that genre
             delta = delta + artists[tid][1][1][genre]
-    deltas[delta] = arid
+
+    if delta not in deltas:
+        deltas[delta] = [arid]
+    else:
+        deltas[delta].append(arid)
 
 # TESTING print deltas
 for delta in sorted(deltas.keys()):
-    print(str(deltas[delta])+"  --  "+str(delta))
+    for arid in deltas[delta]:
+        print(str(arid)+"  --  "+str(delta))
 
 # graph bar graph
 x_lab = artists[tid][1][1].keys()
@@ -126,10 +141,19 @@ x = np.arange(len(x_lab))
 y = artists[tid][1][1].values()
 y1 = []
 y2 = []
-d1 = sorted(deltas.keys())[0]
-d2 = sorted(deltas.keys())[1]
-a1 = deltas[d1]
-a2 = deltas[d2]
+d = sorted(deltas.keys())[0]
+if len(deltas[d]) > 1:
+    a1 = deltas[d][0]
+    a2 = deltas[d][1]
+    d1 = d2 = d
+else:
+    d1 = d
+    a1 = deltas[d][0]
+    d2 = sorted(deltas.keys())[1]
+    a2 = deltas[d2][0]
+name = artists[tid][2]
+name1 = artists[a1][2]
+name2 = artists[a2][2]
 for genre in x_lab:
     if genre in artists[a1][1][1]:
         y1.insert(0, artists[a1][1][1][genre])
@@ -147,8 +171,8 @@ w = 0.1
 plt.xticks(x, x_lab)
 plt.ylabel("Normalized Weight")
 plt.xlabel("Genre")
-ax.bar(x-w, y, width=w, align='center', label=str(tid))
-ax.bar(x, y1, width=w, align='center', label=str(a1)+" - delta: "+str(d1))
-ax.bar(x+w, y2, width=w, align='center', label=str(a2)+" - delta: "+str(d2))
+ax.bar(x-w, y, width=w, align='center', label=name + " (" + str(tid) + ")")
+ax.bar(x, y1, width=w, align='center', label=name1 + " (" + str(a1) + ") - delta: " + str(d1))
+ax.bar(x+w, y2, width=w, align='center', label=name2 + " (" +str(a2)+ ") - delta: " + str(d2))
 plt.legend(loc="upper left")
 plt.show()

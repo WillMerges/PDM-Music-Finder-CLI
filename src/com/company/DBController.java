@@ -60,16 +60,25 @@ public class DBController {
         name = name.replaceAll(",", "\006"); // can't pass a comma in to a csv so use ACK char
         file.write(arid+": "+name+"\n");
 
-        ResultSet genres =
-                statement.executeQuery("select a.genre, a.releasedate from \"Album\" a, \"PublishesAlbum\" p " +
-                                          "where p.arid = "+ arid + " and p.aid = a.aid");
+        //ResultSet genres =
+        //        statement.executeQuery("select a.genre, a.releasedate from \"Album\" a, \"PublishesAlbum\" p " +
+        //                                  "where p.arid = "+ arid + " and p.aid = a.aid");
+
+        ResultSet genres = statement.executeQuery("select a.genre, a.releasedate, pr.num " +
+                "from \"PublishesAlbum\" p, \"Album\" a, " +
+                "(select COUNT(pr.time) num, a.aid from \"PlayRecords\" pr, " +
+                "\"Album\" a, \"Song\" s where s.aid = a.aid GROUP BY a.aid) as pr " +
+                "where p.arid="+arid+" and a.aid = p.aid and pr.aid = p.aid " +
+                "order by a.releasedate DESC");
 
         String genre = "";
         Timestamp t = null;
+        int playcount = 0;
         while(genres.next()) {
           t = genres.getTimestamp("releasedate");
           genre = genres.getString("genre");
-          file.write(genre + "," + t.getTime() + "\n");
+          playcount = genres.getInt("num");
+          file.write(genre + "," + t.getTime() + "," + playcount + "\n");
         }
       }
       System.out.println("Wrote data to: "+outfile);

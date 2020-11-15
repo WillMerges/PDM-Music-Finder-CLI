@@ -1,0 +1,29 @@
+select ar.arid, a.genre, a.releasedate, pr.last_played from "Artist" ar, "PublishesAlbum" p, "Album" a,
+(select MAX(pr.time) last_played, a.aid FROM "PlayRecords" pr, "Album" a, "Song" s
+ where s.aid = a.aid
+ GROUP BY a.aid) as pr
+where ar.arid = p.arid AND a.aid = p.aid AND pr.aid = p.aid
+ORDER BY ar.arid, a.releasedate, pr.last_played ASC
+
+
+
+select a.genre, a.releasedate, pr.last_played from "PublishesAlbum" p, "Album" a,
+(select MAX(pr.time) last_played, a.aid FROM "PlayRecords" pr, "Album" a, "Song" s
+ where s.aid = a.aid
+ GROUP BY a.aid) as pr
+where 45 = p.arid AND a.aid = p.aid AND pr.aid = p.aid
+ORDER BY a.releasedate DESC
+
+
+select a.genre, a.releasedate, pr.num from "PublishesAlbum" p, "Album" a,
+(select COUNT(pr.time) num, a.aid FROM "PlayRecords" pr, "Album" a, "Song" s
+ where s.aid = a.aid
+ GROUP BY a.aid) as pr
+where 45 = p.arid AND a.aid = p.aid AND pr.aid = p.aid
+ORDER BY a.releasedate, pr.num DESC
+
+
+select COUNT(pr.time) as num, a.aid FROM "PlayRecords" pr, "Album" a, "Song" s
+where s.aid = a.aid
+GROUP BY a.aid
+ORDER BY a.aid DESC
