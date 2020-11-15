@@ -60,10 +60,6 @@ public class DBController {
         name = name.replaceAll(",", "\006"); // can't pass a comma in to a csv so use ACK char
         file.write(arid+": "+name+"\n");
 
-        //ResultSet genres =
-        //        statement.executeQuery("select a.genre, a.releasedate from \"Album\" a, \"PublishesAlbum\" p " +
-        //                                  "where p.arid = "+ arid + " and p.aid = a.aid");
-
         ResultSet genres = statement.executeQuery("select a.genre, a.releasedate, pr.num " +
                 "from \"PublishesAlbum\" p, \"Album\" a, " +
                 "(select COUNT(pr.time) num, a.aid from \"PlayRecords\" pr, " +
@@ -85,6 +81,49 @@ public class DBController {
     } catch(Exception e) {
       e.printStackTrace();
       System.out.println("Error fetching artist genre scores.");
+    } finally {
+      try {
+        file.close();
+      } catch (Exception e) {}
+    }
+  }
+
+  public void getUserGenreScores(String outfile) {
+    FileWriter file = null;
+    try {
+      Files.deleteIfExists(Paths.get(outfile));
+      file = new FileWriter(outfile);
+
+      Statement statement = connection.createStatement();
+      ResultSet resultSet =
+              statement.executeQuery("select distinct username from \"User\" u");
+
+      String username = "";
+      while(resultSet.next()) {
+        username = resultSet.getString("username");
+        String name = username.replaceAll(",", "\006"); // can't pass a comma in to a csv so use ACK char
+        file.write(name+"\n");
+
+        ResultSet genres = statement.executeQuery("select a.genre, pr.lastplayed, pr.numplayed from \"Album\" a, " +
+                        "(select COUNT(pr.time) numplayed, MAX(pr.time) lastplayed, s.aid from \"PlayRecords\" pr, " +
+                        "\"Song\" s, \"User\" u where pr.username='"+username+"' group by s.aid) as pr " +
+                        "where pr.aid = a.aid " +
+                        "order by pr.lastplayed DESC");
+
+        String genre = "";
+        Timestamp t = null;
+        int playcount = 0;
+        while(genres.next()) {
+          t = genres.getTimestamp("lastplayed");
+          genre = genres.getString("genre");
+          playcount = genres.getInt("numplayed");
+          file.write(genre + "," + t.getTime() + "," + playcount + "\n");
+        }
+      }
+      System.out.println("Wrote data to: "+outfile);
+    } catch(Exception e) {
+      e.printStackTrace();
+      System.out.println("Error fetching user genre scores.");
     } finally {
       try {
         file.close();

@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # value multiplied by % played to get weight
-playcount_multiplier = 0
+playcount_multiplier = 100.0
 
 # for now, use a linear weighting (maybe make logistic?)
 def generate_time_weights(N):
@@ -53,8 +53,8 @@ while reading:
             print("First line was not an artist, error reading file.")
             exit()
         else:
-            artists[arid][0][timestamp] = [genre, playcount]
-            artists[arid][3] = artists[arid][3] + playcount
+            artists[current_artist][0][timestamp] = [genre, playcount]
+            artists[current_artist][3] = artists[current_artist][3] + playcount
 
 # at this point the whole file is read
 file.close()
@@ -70,9 +70,7 @@ for key in artists.keys():
 
     i = 0
     for timestamp in timestamp_list:
-        print(timestamp)
         time_weight = time_weight_list[i]
-        print(time_weight)
         genre = artists[key][0][timestamp][0]
         playcount = artists[key][0][timestamp][1]
         play_weight = float(playcount) / total_plays * playcount_multiplier
@@ -100,8 +98,8 @@ for arid in sorted(list(artists.keys())):
    print()
 
 
-if len(sys.argv) == 3:
-    tid = int(sys.argv[2])
+if len(sys.argv) == 2:
+    tid = int(sys.argv[1])
 else:
     tid = int(input("'arid' of artist to compare against: "))
     print()
