@@ -67,16 +67,16 @@ while reading:
 # at this point the whole file is read
 file.close()
 
-# TESTING
-for user in users:
-    print("-------------------------------")
-    print(user)
-    for t in users[user][0]:
-        print(t)
-        for entry in users[user][0][t]:
-            print(entry[0]+" "+str(entry[1]))
-    print("-------------------------------")
-    print()
+# # TESTING
+# for user in users:
+#     print("-------------------------------")
+#     print(user)
+#     for t in users[user][0]:
+#         print(t)
+#         for entry in users[user][0][t]:
+#             print(entry[0]+" "+str(entry[1]))
+#     print("-------------------------------")
+#     print()
 
 # add up the weights
 for key in users.keys():

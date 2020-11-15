@@ -106,7 +106,7 @@ public class DBController {
 
         ResultSet genres = statement.executeQuery("select a.genre, pr.lastplayed, pr.numplayed from \"Album\" a, " +
                         "(select COUNT(pr.time) numplayed, MAX(pr.time) lastplayed, s.aid from \"PlayRecords\" pr, " +
-                        "\"Song\" s, \"User\" u where pr.username='"+username+"' group by s.aid) as pr " +
+                        "\"Song\" s, \"User\" u where pr.username='"+username+"' and pr.sid = s.sid group by s.aid) as pr " +
                         "where pr.aid = a.aid " +
                         "order by pr.lastplayed DESC");
 
