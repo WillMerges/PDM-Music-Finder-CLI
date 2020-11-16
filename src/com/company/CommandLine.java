@@ -138,12 +138,30 @@ public class CommandLine {
                         try {
                             Date startDate = dateFormat.parse(startStr);
                             Date endDate = dateFormat.parse(endStr);
-                            db.topTenSongs(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
+                            db.topTenArtists(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
                     } else {
-                        System.out.println("top_ten_songs must be run as \"top_ten_songs <starting date> <end date>");
+                        System.out.println("top_ten must be run as \"top_ten <starting date> <end date>");
+                    }
+                    break;
+                case "top_genre":
+                    if (tokens.size() == 3) {
+                        String yearStr = tokens.get(2);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+                        try {
+                            Date year = dateFormat.parse(yearStr);
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(year);
+                            calendar.add(Calendar.YEAR, 1);
+                            Date end = calendar.getTime();
+                            db.topGenre(new Timestamp(year.getTime()), new Timestamp(end.getTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("top_genre must be run as \"top_genre <year>");
                     }
                     break;
                 case "similar_users":

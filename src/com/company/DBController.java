@@ -193,7 +193,7 @@ public class DBController {
     }
   }
 
-  public void topTenSongs(Timestamp start, Timestamp end) {
+  public void topTenArtists(Timestamp start, Timestamp end) {
     if (connection != null) {
       try {
         PreparedStatement searchStatement =
@@ -213,6 +213,31 @@ public class DBController {
           i++;
         }
 
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
+    }
+  }
+
+  public void topGenre(Timestamp start, Timestamp end) {
+    if (connection != null) {
+      try {
+        PreparedStatement preparedStatement =
+            connection.prepareStatement("SELECT COUNT(PR.time) AS C, A.genre FROM \"PlayRecords\" PR, " +
+                "\"Album\" A, \"Song\" S WHERE PR.sid = S.sid AND S.aid = A.aid AND PR.time BETWEEN ? AND ? " +
+                "GROUP BY A.genre ORDER BY C DESC");
+        preparedStatement.setObject(1, start);
+        preparedStatement.setObject(2, end);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        System.out.println("Ranking | Genre | Play Count");
+
+        int i = 1;
+        while (resultSet.next() && i <= 10) {
+          System.out.println(i + ":\t" + resultSet.getString("genre") + "\t" +
+              resultSet.getString("C"));
+          i++;
+        }
       } catch (SQLException throwable) {
         throwable.printStackTrace();
       }
