@@ -1,13 +1,11 @@
 package com.company;
 
-import jdk.internal.util.xml.impl.Input;
-
 import java.io.FileWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -192,6 +190,32 @@ public class DBController {
     } catch (SQLException throwable) {
       System.out.println("createUser() has encountered an error!");
       throwable.printStackTrace();
+    }
+  }
+
+  public void topTenSongs(Timestamp start, Timestamp end) {
+    if (connection != null) {
+      try {
+        PreparedStatement searchStatement =
+            connection.prepareStatement("SELECT COUNT(PR.time) AS C, PA.arid FROM \"PlayRecords\" PR, " +
+                "\"PublishesAlbum\" PA, \"Song\" S WHERE PR.sid = S.sid AND S.aid = PA.aid AND " +
+                "PR.time BETWEEN ? AND ? GROUP BY PA.arid ORDER BY C DESC");
+        searchStatement.setObject(1, start);
+        searchStatement.setObject(2, end);
+        ResultSet resultSet = searchStatement.executeQuery();
+
+        System.out.println("Ranking | ARID | Play Count");
+
+        int i = 1;
+        while (resultSet.next() && i <= 10) {
+          System.out.println(i + ":\t" + resultSet.getString("arid") + "\t" +
+              resultSet.getString("C"));
+          i++;
+        }
+
+      } catch (SQLException throwable) {
+        throwable.printStackTrace();
+      }
     }
   }
 

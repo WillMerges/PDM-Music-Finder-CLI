@@ -1,9 +1,9 @@
 package com.company;
 
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
-import java.util.Scanner;
-import java.util.StringTokenizer;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class CommandLine {
 
@@ -129,6 +129,22 @@ public class CommandLine {
             switch (analytic) {
                 case "similar_artist":
                     db.getArtistGenreScores("artist_genre_scores.csv");
+                    break;
+                case "top_ten":
+                    if (tokens.size() == 4) {
+                        String startStr = tokens.get(2);
+                        String endStr = tokens.get(3);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy");
+                        try {
+                            Date startDate = dateFormat.parse(startStr);
+                            Date endDate = dateFormat.parse(endStr);
+                            db.topTenSongs(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        System.out.println("top_ten_songs must be run as \"top_ten_songs <starting date> <end date>");
+                    }
                     break;
                 case "similar_users":
                     db.getUserGenreScores("user_genre_scores.csv");
