@@ -138,7 +138,11 @@ public class CommandLine {
                         try {
                             Date startDate = dateFormat.parse(startStr);
                             Date endDate = dateFormat.parse(endStr);
-                            db.topTenArtists(new Timestamp(startDate.getTime()), new Timestamp(endDate.getTime()));
+                            Calendar calendar = Calendar.getInstance();
+                            calendar.setTime(endDate);
+                            calendar.add(Calendar.YEAR, 1);
+                            Date end = calendar.getTime();
+                            db.topTenArtists(new Timestamp(startDate.getTime()), new Timestamp(end.getTime()));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
