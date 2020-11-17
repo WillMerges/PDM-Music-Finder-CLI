@@ -41,6 +41,45 @@ public class DBController {
     }
   }
 
+  public void getCultArtists(String outfile){
+    FileWriter file = null;
+    try {
+      Files.deleteIfExists(Paths.get(outfile));
+      file = new FileWriter(outfile);
+
+      Statement statement = connection.createStatement();
+      ResultSet resultSet = statement.executeQuery("select uc.name artist, pc.plays/uc.users::double precision ratio  from " +
+                "(select COUNT(s.title) plays, ar.name  from \"PlayRecords\" pr, \"Artist\" ar, \"Song\" s, \"Album\" a, \"PublishesAlbum\" p " +
+                "where s.aid = a.aid AND p.aid = a.aid AND p.arid = ar.arid AND pr.sid = s.sid " +
+                "GROUP BY ar.name ) as pc " +
+                "INNER JOIN " +
+                "(select count(upa.username) users, upa.name from " +
+                "(select ar.name, pr.username from  \"PlayRecords\" pr, \"Artist\" ar, \"Song\" s, \"Album\" a, \"PublishesAlbum\" p " +
+                "where s.aid = a.aid AND p.aid = a.aid AND p.arid = ar.arid AND pr.sid = s.sid " +
+                "GROUP BY pr.username,  ar.name) as upa " +
+                "GROUP BY upa.name) as uc " +
+                "on pc.name = uc.name");
+
+        String name = "";
+        double ratio = 0.0;
+        while(resultSet.next()) {
+          name = resultSet.getString("artist");
+          ratio = resultSet.getInt("ratio");
+          file.write(name + "," + ratio + "\n");
+        }
+        System.out.println("Wrote data to: "+outfile);
+      }
+
+     catch(Exception e) {
+      e.printStackTrace();
+      System.out.println("Error fetching cult artist scores.");
+    } finally {
+      try {
+        file.close();
+      } catch (Exception e) {}
+    }
+  }
+
   public void getArtistGenreScores(String outfile) {
     FileWriter file = null;
     try {
@@ -128,6 +167,7 @@ public class DBController {
       } catch (Exception e) {}
     }
   }
+
 
   // check if a user exists in the database
   public boolean userExists(String user) {

@@ -167,6 +167,9 @@ public class CommandLine {
                 case "similar_users":
                     db.getUserGenreScores("user_genre_scores.csv");
                     break;
+                case "cult_artists":
+                    db.getCultArtists("cult_artists.csv");
+                    break;
                 default:
                     System.out.println(analytic+" is not a valid analytic.");
             }
