@@ -58,13 +58,14 @@ public class DBController {
                 "where s.aid = a.aid AND p.aid = a.aid AND p.arid = ar.arid AND pr.sid = s.sid " +
                 "GROUP BY pr.username,  ar.name) as upa " +
                 "GROUP BY upa.name) as uc " +
-                "on pc.name = uc.name");
+                "on pc.name = uc.name " +
+                "order by ratio desc");
 
         String name = "";
         double ratio = 0.0;
         while(resultSet.next()) {
           name = resultSet.getString("artist");
-          ratio = resultSet.getInt("ratio");
+          ratio = resultSet.getDouble("ratio");
           file.write(name + "," + ratio + "\n");
         }
         System.out.println("Wrote data to: "+outfile);
