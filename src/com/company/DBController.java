@@ -74,13 +74,17 @@ public class DBController {
       String genre;
       String name;
       file.write("genre, name\n");
+      System.out.println("Top Artist by Genre:");
+      System.out.println("=================================================================");
+      System.out.println("Genre   :   Artist");
       while (resultSet.next()) {
         genre = resultSet.getString("genre");
         name = resultSet.getString("name");
+        System.out.println(genre + "   :   " + name);
         file.write(genre + "," + name + "\n");
       }
 
-      System.out.println("File successfully written!");
+      System.out.println("Wrote data to: " + outfile);
       statement.close();
       resultSet.close();
       file.close();

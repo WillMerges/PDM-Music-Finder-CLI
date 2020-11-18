@@ -174,6 +174,9 @@ public class CommandLine {
                 case "cult_artists":
                     db.getCultArtists("cult_artists.csv");
                     break;
+                case "top_artist_by_genre":
+                    db.writeTopArtistByGenre("top_artist_by_genre.csv");
+                    break;
                 default:
                     System.out.println(analytic+" is not a valid analytic.");
             }
