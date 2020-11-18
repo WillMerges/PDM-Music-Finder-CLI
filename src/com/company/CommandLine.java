@@ -127,7 +127,7 @@ public class CommandLine {
             String analytic = tokens.get(1);
 
             switch (analytic) {
-                case "similar_artist":
+                case "similar_artists":
                     db.getArtistGenreScores("artist_genre_scores.csv");
                     break;
                 case "top_ten":
