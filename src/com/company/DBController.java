@@ -41,6 +41,55 @@ public class DBController {
     }
   }
 
+  // Calculate who the most-played artist is by genre of music, then write the results to a .csv file
+  public void writeTopArtistByGenre(String outfile) {
+    FileWriter file;
+
+    try {
+      Files.deleteIfExists(Paths.get(outfile));
+      file = new FileWriter(outfile);
+
+      Statement statement = connection.createStatement();
+
+      ResultSet resultSet =
+              statement.executeQuery(
+                      "SELECT t1.genre, t1.name " +
+                              "FROM " +
+                              "(SELECT COUNT(s.title) plays, ar.name, a.genre " +
+                              "FROM \"PlayRecords\" pr, \"Artist\" ar, \"Song\" s, \"Album\" a, \"PublishesAlbum\" p " +
+                              "WHERE s.aid = a.aid AND p.aid = a.aid AND p.arid = ar.arid AND pr.sid = s.sid " +
+                              "GROUP BY ar.name, a.genre " +
+                              "ORDER BY plays) AS t1 " +
+                              "LEFT OUTER JOIN " +
+                              "(SELECT COUNT(s.title) plays, ar.name, a.genre " +
+                              "FROM \"PlayRecords\" pr, \"Artist\" ar, \"Song\" s, \"Album\" a, \"PublishesAlbum\" p " +
+                              "WHERE s.aid = a.aid AND p.aid = a.aid AND p.arid = ar.arid AND pr.sid = s.sid " +
+                              "GROUP BY ar.name, a.genre " +
+                              "ORDER BY plays) AS t2 " +
+                              "ON t2.genre = t1.genre " +
+                              "AND t2.plays > t1.plays " +
+                              "WHERE t2.plays IS NULL " +
+                              "ORDER BY t1.genre");
+
+      String genre;
+      String name;
+      file.write("genre, name\n");
+      while (resultSet.next()) {
+        genre = resultSet.getString("genre");
+        name = resultSet.getString("name");
+        file.write(genre + "," + name + "\n");
+      }
+
+      System.out.println("File successfully written!");
+      statement.close();
+      resultSet.close();
+      file.close();
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+    }
+  }
+
   public void getCultArtists(String outfile){
     FileWriter file = null;
     try {
